@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>acidwork</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
+    <script src="https://unpkg.com/p5.touchgui@0.5.2/lib/p5.touchgui.js"></script>
+
+
+<body>
+
+    <script>
+
+
+
+
+
+
+
+        class drumVoice {
+            constructor(type, freq, modType, modAmt, attack, decay) {
+                this.osc = new p5.Oscillator('sine');
+                this.type = type;
+                this.freq = freq;
+                this.modType = modType;
+                this.modAmt = modAmt;
+                this.attack = attack;
+                this.decay = decay;
+                this.modulator = new p5.Oscillator('sine');
+                this.env = new p5.Envelope(this.attack, this.modAmt, this.decay, this.modAmt);
+                this.penv = new p5.Envelope(this.attack, this.modAmt, this.decay, this.modAmt);
+                this.n = new p5.Noise('white');
+                this.delay = new p5.Delay();
+                this.hp = new p5.HighPass();
+                this.gain = new p5.Gain();
+
+
+
+                if (modType == 2) {
+
+
+                }
+
+
+
+            }
+
+            initVoice() {
+
+
+
+
+                switch (this.modType) {
+                    case 0:
+                        this.osc.start();
+                        this.osc.type = this.type;
+                        this.osc.amp(.7);
+                        this.env.setADSR(0.000, 0., this.decay, 0.1);
+                        this.penv.setADSR(this.attack, 0.4, this.decay, 0.1);
+                        this.modulator.amp(this.modAmt);
+                        this.penv.scale(this.modAmt);
+                        this.osc.freq(this.penv);
+                        this.env.play(this.osc);
+                        break;
+                    case 1:
+                        this.osc.start();
+                        this.n.start();
+                        this.osc.type = this.type;
+                        this.osc.amp(.7);
+                        this.env.setADSR(0.0, 0.02, this.decay, 0.0093);
+                        this.penv.setADSR(this.attack, 0.4, this.decay, 0.1);
+                        this.modulator.amp(this.modAmt);
+                        this.penv.scale(this.modAmt);
+                        this.osc.freq(this.penv);
+                        this.env.play(this.n);
+                        this.env.play(this.osc);
+                        break;
+                    case 2:
+                        this.osc.start();
+                        this.n.start();
+                        this.modulator.start();
+                        this.osc.type = this.type;
+                        this.osc.amp(.6);
+
+                        this.env.setADSR(0.006, 0.02, this.decay, 0.193);
+                        this.penv.setADSR(this.attack, 0.4, this.decay, 0.8);
+                        this.modulator.freq(this.modAmt);
+                        this.modulator.amp(.6);
+                        this.penv.scale(this.modAmt);
+                        this.penv.scale(this.modAmt);
+                        this.osc.freq(this.modulator);
+                        this.modulator.connect(this.hp);
+                        this.osc.connect(this.hp);
+                        this.n.connect(this.hp);
+                        this.hp.freq(7000);
+                        this.env.play(this.n);
+                        this.env.play(this.modulator);
+                        this.env.play(this.hp);
+                        this.env.play(this.osc);
+
+                        this.delay.process(this.hp, .005, .28, 9000);
+
+
+
+                        break;
+                    case 3:
+
+                        break;
+
+
+                }
+
+
+            }
+
+            trig() {
+                this.env.play();
+                this.penv.play();
+            }
+
+            mix(g) {
+
+                this.env.connect(g)
+                this.delay.connect(g);
+
+            }
+        }
+
+        let transp = 0;
+        let clock = 0;
+        let click = 0;
+        let flag = false;
+        let step = [0, 0, 0, 0, 0, 0, 0, 0];
+        let st;
+        let gui;
+        let b1;
+
+        let seq;
+        let s;
+        let stepsKick = [];
+        let stepsSnare = [];
+        let stepsHat = [];
+        let currentStep = 0;
+        let d1;
+        let d2;
+        let d3;
+        let d4;
+        let actx;
+        let freq;
+        let amp;
+        let sr;
+        let drift;
+        let workletNode;
+  
+
+
+        function setup() {
+            actx = getAudioContext();
+            actx.audioWorklet.addModule("random-noise-processor.js")
+                .then(() => {
+                    workletNode = new AudioWorkletNode(actx, 'random-noise-processor');
+                    workletNode.connect(actx.destination);
+ 
+    
+                })
+                .catch(err => {
+                    console.error('Failed to load AudioWorklet module:', err);
+                });
+         
+
+            createCanvas(600, 600);
+
+            gui = createGui();
+            gui.setRounding(5);
+            b1 = createToggle("play", 525, 25, 50, 50);
+
+            getAudioContext().suspend();
+
+
+            s = createSlider("Slider", 350, 25, 150, 50, 40, 3);
+            for (var i = 0; i < 8; i++) {
+                let stk = createToggle("", 20 + (i * 40), 100, 20, 40);
+                stepsKick.push(stk);
+                let sts = createToggle("", 20 + (i * 40), 160, 20, 40);
+                stepsSnare.push(sts);
+                let sth = createToggle("", 20 + (i * 40), 220, 20, 40);
+                stepsHat.push(sth);
+            }
+            d1 = new drumVoice('sine', 1, 0, 20, .002, .7);
+            d2 = new drumVoice('sine', 60, 1, 30, .002, .7);
+            d3 = new drumVoice('sine', 350, 2, 130, .0, .01);
+            d4 = new drumVoice('sine', 350, 3, 130, .0, .01);
+            d1.initVoice();
+            d2.initVoice();
+            d3.initVoice();
+            d4.initVoice();
+
+
+        }
+
+        function draw() {
+            background(200);
+            drawGui();
+            playSequence();
+
+
+
+
+        }
+
+        function playSequence() {
+            click = s.val;
+
+            if (clock > click) {
+                clock = 0;
+
+
+                currentStep = (currentStep + 1) % 8;
+
+
+                if (stepsKick[currentStep].val == true) {
+                    d4.trig();
+                }
+                // if (stepsSnare[currentStep].val == true) {
+                //     d2.trig();
+                // }
+                // if (stepsHat[currentStep].val == true) {
+                //     d3.trig();
+                // }
+
+
+
+            }
+
+
+            text("bpm:" + floor(((60 / click) * 1000) / 64), 350, 20);
+            text("current beat:" + (currentStep + 1), 420, 20);
+
+            if (b1.val) {
+                clock = clock + 1;
+                userStartAudio();
+                setAudioParams();
+
+
+            } else {
+                flag = false;
+                clock = 0;
+                currentStep = 0;
+            }
+
+            if (currentStep == 7 && clock >= click) {
+                flag = true;
+
+
+            }
+            else { flag = false; }
+
+
+
+            if (flag == true) {
+                flag = false;
+
+
+            }
+
+        }
+
+        function setAudioParams(){
+             freq = workletNode.parameters.get("frequency");
+             drift = workletNode.parameters.get("drift");
+             amp = workletNode.parameters.get("amplitude");
+             sr = workletNode.parameters.get("sr");
+              let mapp = map(mouseX,0,width,100,200);  
+              
+             freq.exponentialRampToValueAtTime(mapp, actx.currentTime+1);
+             drift.setValueAtTime(2, actx.currentTime);
+           
+          
+
+        }
+
+
+    </script>
+
+</body>
+
+</html>

@@ -37,20 +37,17 @@
                 this.n = new p5.Noise('white');
                 this.delay = new p5.Delay();
                 this.hp = new p5.HighPass();
-                this.gain = new p5.Gain();
-
-
-
-                if (modType == 2) {
-
-
-                }
-
-
-
+                this.mf =50;
+                this.bfreq;
+                this.mfreq;
+                this.r = .1;
+                this.drift;
+                this.amp;
+                this.workletNodeSaw;
+                this.workletNodeMoog;
             }
 
-            initVoice() {
+            initVoice(actx) {
 
 
 
@@ -109,6 +106,50 @@
 
                         break;
                     case 3:
+                        this.env.setADSR(0.0, 0.05, 0.1, 0.02);
+
+                        actx.audioWorklet.addModule("moogLadder.js")
+                            .then(() => {
+                                this.workletNodeMoog = new AudioWorkletNode(actx, 'moogladder');
+
+                                console.log(this.workletNodeMoog)
+                                this.mfreq = this.workletNodeMoog.parameters.get("frequency");
+                                this.r = this.workletNodeMoog.parameters.get("resonance");
+                                this.mfreq.setValueAtTime(this.mf, actx.currentTime);
+                                this.r.setValueAtTime(.5, actx.currentTime);
+
+                            })
+                            .catch(err => {
+                                console.error('Failed to load AudioWorklet module:', err);
+                            });
+
+
+
+                        actx.audioWorklet.addModule("doubleSaw.js")
+                            .then(() => {
+                                this.workletNodeSaw = new AudioWorkletNode(actx, 'doublesaw');
+                                this.workletNodeSaw.disconnect();
+                                this.workletNodeSaw.connect(this.workletNodeMoog);
+                                this.workletNodeMoog.disconnect();
+                                this.workletNodeMoog.connect(this.hp);
+                                this.hp.freq(20);
+                                this.env.play(this.hp);
+                                console.log(this.workletNodeSaw)
+                                this.bfreq = this.workletNodeSaw.parameters.get("frequency");
+                                this.drift = this.workletNodeSaw.parameters.get("drift");
+                                this.amp = this.workletNodeSaw.parameters.get("amplitude");
+                                this.bfreq.setValueAtTime(140, actx.currentTime);
+                                this.drift.setValueAtTime(2, actx.currentTime);
+
+                            })
+                            .catch(err => {
+                                console.error('Failed to load AudioWorklet module:', err);
+                            });
+
+
+
+
+
 
                         break;
 
@@ -122,13 +163,16 @@
                 this.env.play();
                 this.penv.play();
             }
-
-            mix(g) {
-
-                this.env.connect(g)
-                this.delay.connect(g);
+            filty(f) {
+                this.mf = f;
+                this.mfreq = this.workletNodeMoog.parameters.get("frequency");
+                this.r = this.workletNodeMoog.parameters.get("resonance");
+                this.mfreq.setValueAtTime(this.mf, actx.currentTime);
+                this.r.setValueAtTime(.5, actx.currentTime);
 
             }
+
+
         }
 
         let transp = 0;
@@ -156,22 +200,13 @@
         let sr;
         let drift;
         let workletNode;
-  
+
 
 
         function setup() {
             actx = getAudioContext();
-            actx.audioWorklet.addModule("random-noise-processor.js")
-                .then(() => {
-                    workletNode = new AudioWorkletNode(actx, 'random-noise-processor');
-                    workletNode.connect(actx.destination);
- 
-    
-                })
-                .catch(err => {
-                    console.error('Failed to load AudioWorklet module:', err);
-                });
-         
+
+
 
             createCanvas(600, 600);
 
@@ -191,14 +226,13 @@
                 let sth = createToggle("", 20 + (i * 40), 220, 20, 40);
                 stepsHat.push(sth);
             }
-            d1 = new drumVoice('sine', 1, 0, 20, .002, .7);
             d2 = new drumVoice('sine', 60, 1, 30, .002, .7);
             d3 = new drumVoice('sine', 350, 2, 130, .0, .01);
             d4 = new drumVoice('sine', 350, 3, 130, .0, .01);
-            d1.initVoice();
-            d2.initVoice();
-            d3.initVoice();
-            d4.initVoice();
+            // d1.initVoice(actx);
+            d2.initVoice(actx);
+            d3.initVoice(actx);
+            d4.initVoice(actx);
 
 
         }
@@ -207,6 +241,8 @@
             background(200);
             drawGui();
             playSequence();
+            let mf = map(mouseX, 0, width, 20, 500);
+            d4.filty(mf)
 
 
 
@@ -244,7 +280,7 @@
             if (b1.val) {
                 clock = clock + 1;
                 userStartAudio();
-                setAudioParams();
+                // setAudioParams();
 
 
             } else {
@@ -270,17 +306,17 @@
 
         }
 
-        function setAudioParams(){
-             freq = workletNode.parameters.get("frequency");
-             drift = workletNode.parameters.get("drift");
-             amp = workletNode.parameters.get("amplitude");
-             sr = workletNode.parameters.get("sr");
-              let mapp = map(mouseX,0,width,100,200);  
-              
-             freq.exponentialRampToValueAtTime(mapp, actx.currentTime+1);
-             drift.setValueAtTime(2, actx.currentTime);
-           
-          
+        function setAudioParams() {
+            freq = workletNode.parameters.get("frequency");
+            drift = workletNode.parameters.get("drift");
+            amp = workletNode.parameters.get("amplitude");
+            sr = workletNode.parameters.get("sr");
+            let mapp = map(mouseX, 0, width, 100, 200);
+
+            freq.exponentialRampToValueAtTime(mapp, actx.currentTime + 1);
+            drift.setValueAtTime(2, actx.currentTime);
+
+
 
         }
 

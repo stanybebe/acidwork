@@ -27,7 +27,8 @@ class doubleSaw extends AudioWorkletProcessor {
         name: "drift",
         defaultValue: 1,
         minValue: 0,
-        maxValue: 3,
+        maxValue: 5,
+        automationRate: "k-rate",
         
 
       },

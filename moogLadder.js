@@ -22,9 +22,10 @@ class moogLadder extends AudioWorkletProcessor {
         return [
             {
                 name: "amplitude",
-                defaultValue: 0.5,
+                defaultValue: 0.3,
                 minValue: 0,
-                maxValue: 1
+                maxValue: 1,
+                automationRate: "k-rate",
               },
             {
                 name: "frequency",

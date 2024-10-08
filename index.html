@@ -10,203 +10,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
     <script src="https://unpkg.com/p5.touchgui@0.5.2/lib/p5.touchgui.js"></script>
+    <script src="/components.js"></script>
 
 
 <body>
 
     <script>
 
-
-
-
-
-
-
-        class drumVoice {
-            constructor(type, freq, modType, modAmt, attack, decay) {
-                this.osc = new p5.Oscillator('sine');
-                this.type = type;
-                this.freq = freq;
-                this.modType = modType;
-                this.modAmt = modAmt;
-                this.attack = attack;
-                this.decay = decay;
-                this.modulator = new p5.Oscillator('sine');
-                this.env = new p5.Envelope(this.attack, this.modAmt, this.decay, this.modAmt);
-                this.penv = new p5.Envelope(this.attack, this.modAmt, this.decay, this.modAmt);
-                this.n = new p5.Noise('white');
-                this.delay = new p5.Delay();
-                this.hp = new p5.HighPass();
-                this.bf = 200;
-                this.mf = 100;
-                this.bfreq;
-                this.mfreq;
-                this.r = .8;
-                this.drift;
-                this.amp;
-                this.workletNodeSaw;
-                this.workletNodeMoog;
-                this.gain = new p5.Gain();
-                this.gain.disconnect();
-
-            }
-
-            initVoice(actx) {
-
-
-
-
-                switch (this.modType) {
-                    case 0:
-                        this.osc.start();
-                        this.osc.type = this.type;
-                        this.osc.amp(.7);
-                        this.env.setADSR(0.000, 0., this.decay, 0.1);
-                        this.penv.setADSR(this.attack, 0.4, this.decay, 0.1);
-                        this.modulator.amp(this.modAmt);
-                        this.penv.scale(this.modAmt);
-                        this.osc.freq(this.penv);
-                        this.env.play(this.osc);
-                        break;
-                    case 1:
-                        this.osc.start();
-                        this.n.start();
-                        this.osc.type = this.type;
-                        this.osc.amp(.7);
-                        this.env.setADSR(0.0, 0.02, this.decay, 0.0093);
-                        this.penv.setADSR(this.attack, 0.4, this.decay, 0.1);
-                        this.modulator.amp(this.modAmt);
-                        this.penv.scale(this.modAmt);
-                        this.osc.freq(this.penv);
-                        this.env.play(this.n);
-                        this.env.play(this.osc);
-                        break;
-                    case 2:
-                        this.osc.start();
-                        this.n.start();
-                        this.modulator.start();
-                        this.osc.type = this.type;
-                        this.osc.amp(.06);
-
-                        this.osc.disconnect();
-                        this.n.disconnect();
-                        this.modulator.disconnect();
-
-                        this.env.setADSR(0.006, 0.02, this.decay, 0.193);
-                        this.penv.setADSR(this.attack, 0.4, this.decay, 0.8);
-                        this.modulator.freq(this.modAmt);
-                        this.modulator.amp(.06);
-                        this.penv.scale(this.modAmt);
-                        this.osc.freq(this.modulator);
-                        this.modulator.connect(this.hp);
-                        this.osc.connect(this.hp);
-
-                        this.n.connect(this.hp);
-
-                        this.hp.freq(7000);
-
-                        this.env.play(this.modulator);
-                        this.env.play(this.hp);
-                        this.env.play(this.osc);
-
-                        this.delay.process(this.hp, .005, .28, 9000);
-
-                        this.env.mult(.2);;
-
-                        this.delay.disconnect();
-
-
-
-
-                        this.gain.setInput(this.delay, this.env);
-                        this.gain.connect();
-                        this.gain.amp(.02)
-
-
-
-                        break;
-                    case 3:
-                        this.env.setADSR(0.001, 0.04, 0.2, 0.4);
-
-                        actx.audioWorklet.addModule("moogLadder.js")
-                            .then(() => {
-                                this.workletNodeMoog = new AudioWorkletNode(actx, 'moogladder');
-
-                                console.log(this.workletNodeMoog)
-                                this.mfreq = this.workletNodeMoog.parameters.get("frequency");
-                                this.r = this.workletNodeMoog.parameters.get("resonance");
-                                this.mfreq.setValueAtTime(this.mf, actx.currentTime);
-                                this.r.setValueAtTime(.5, actx.currentTime);
-
-                                actx.audioWorklet.addModule("doubleSaw.js")
-                                    .then(() => {
-                                        this.workletNodeSaw = new AudioWorkletNode(actx, 'doublesaw');
-                                        this.workletNodeSaw.disconnect();
-                                        this.workletNodeSaw.connect(this.workletNodeMoog);
-                                        // this.workletNodeMoog.disconnect();
-                                        this.workletNodeMoog.connect(this.hp);
-                                        this.hp.freq(20);
-                                        this.env.play(this.hp);
-                                        console.log(this.workletNodeSaw)
-                                        this.bfreq = this.workletNodeSaw.parameters.get("frequency");
-                                        this.drift = this.workletNodeSaw.parameters.get("drift");
-                                        this.amp = this.workletNodeSaw.parameters.get("amplitude");
-                                        this.bfreq.setValueAtTime(this.bf, actx.currentTime);
-                                        this.drift.setValueAtTime(5, actx.currentTime);
-
-                                    })
-                                    .catch(err => {
-                                        console.error('Failed to load AudioWorklet module:', err);
-                                    });
-
-                            })
-                            .catch(err => {
-                                console.error('Failed to load AudioWorklet module:', err);
-                            });
-
-
-
-
-
-
-
-
-
-
-                        break;
-
-
-                }
-
-
-            }
-
-            trig() {
-                this.env.play();
-                this.penv.play();
-            }
-
-            pitchy(f, t) {
-
-                this.bfreq = this.workletNodeSaw.parameters.get("frequency");
-                this.bf = f;
-                this.bfreq.exponentialRampToValueAtTime(f, actx.currentTime + t);
-
-
-
-            }
-
-            filty(f, t) {
-                this.mf = f;
-                this.mfreq = this.workletNodeMoog.parameters.get("frequency");
-                this.r = this.workletNodeMoog.parameters.get("resonance");
-                this.mfreq.exponentialRampToValueAtTime(f, actx.currentTime + t);
-                this.r.setValueAtTime(.5, actx.currentTime);
-
-            }
-
-
-        }
 
         let transp = 0;
         let clock = 0;
@@ -246,6 +56,7 @@
 
             gui = createGui();
             gui.setRounding(5);
+            gui.setStrokeWeight(0);
             b1 = createToggle("play", 525, 25, 50, 50);
 
             getAudioContext().suspend();
@@ -253,14 +64,14 @@
 
             s = createSlider("Slider", 350, 25, 150, 50, 40, 3);
             for (var i = 0; i < 8; i++) {
-                let stb = createToggle("", 20 + (i * 40), 40, 20, 40);
+                let stb = new stepUnit(width/4, height/4+(i*width/8), 40, 60);
                 stepsBass.push(stb);
-                let stk = createToggle("", 20 + (i * 40), 100, 20, 40);
-                stepsKick.push(stk);
-                let sts = createToggle("", 20 + (i * 40), 160, 20, 40);
-                stepsSnare.push(sts);
-                let sth = createToggle("", 20 + (i * 40), 220, 20, 40);
-                stepsHat.push(sth);
+                // let stk = createToggle("", 20 + (i * 40), 100, 20, 40);
+                // stepsKick.push(stk);
+                // let sts = createToggle("", 20 + (i * 40), 160, 20, 40);
+                // stepsSnare.push(sts);
+                // let sth = createToggle("", 20 + (i * 40), 220, 20, 40);
+                // stepsHat.push(sth);
             }
             d1 = new drumVoice('sine', 1, 0, 20, .002, .7);
             d2 = new drumVoice('sine', 60, 1, 30, .002, .7);

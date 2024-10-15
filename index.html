@@ -9,16 +9,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
-    <script src="https://unpkg.com/p5.touchgui@0.5.2/lib/p5.touchgui.js"></script>
     <script src="/components.js"></script>
 
 
-<body>
+<body style="width: auto!important; overflow: hidden!important">
 
     <script>
 
 
-        let transp = 0;
+
         let clock = 0;
         let click = 0;
         let flag = false;
@@ -44,62 +43,92 @@
         let sr;
         let drift;
         let workletNode;
+        let filt;
+        let scale;
+        let transp;
+        let canvas;
+
 
 
 
         function setup() {
             actx = getAudioContext();
 
+            if (actx) {
 
 
-            createCanvas(600, 600);
 
-            gui = createGui();
-            gui.setRounding(5);
-            gui.setStrokeWeight(0);
-            b1 = createToggle("play", 525, 25, 50, 50);
+                canvas = createCanvas(windowWidth-18, windowHeight-18);
+                canvas.style('display', 'block');  // Removes extra margins
 
-            getAudioContext().suspend();
+                b1 = new tog((width / 4) * 2, height / 30, 20, 20, "#CD947A", "#71587E");
+
+                getAudioContext().suspend();
+
+                // <color name="Persian orange" hex="CD947A" r="205" g="148" b="122" />
+                // <color name="Chinese Violet" hex="71587E" r="113" g="88" b="126" />
+                // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
+                // <color name="Hunyadi yellow" hex="F0B650" r="240" g="182" b="80" />
+                // <color name="Keppel" hex="67B5A0" r="103" g="181" b="160" />
 
 
-            s = createSlider("Slider", 350, 25, 150, 50, 40, 3);
-            for (var i = 0; i < 8; i++) {
-                let stb = new stepUnit(width/4, height/4+(i*width/8), 40, 60);
-                stepsBass.push(stb);
-                // let stk = createToggle("", 20 + (i * 40), 100, 20, 40);
-                // stepsKick.push(stk);
-                // let sts = createToggle("", 20 + (i * 40), 160, 20, 40);
-                // stepsSnare.push(sts);
-                // let sth = createToggle("", 20 + (i * 40), 220, 20, 40);
-                // stepsHat.push(sth);
+
+                s = new slidey(width - ((width / 4) * 1.6), height / 16, width /3, 30, 0, "#CD947A", "#71587E", 0);
+                filter = new slidey(width / 4, height *.7, width /2, 30, 0, "#CD947A", "#71587E", 0);
+                for (var i = 0; i < 8; i++) {
+                    let stb = new stepUnit(width / 8 + (i * width / 10), height / 7, width /24, 60, "#CD947A", "#71587E", 0);
+                    stepsBass.push(stb);
+                    let stk = new stepUnit(width / 8 + (i * width / 10), (height / 7) * 2, width /24, 60, "#CD947A", "#71587E", 0);
+                    stepsKick.push(stk);
+                    let sts = new stepUnit(width / 8 + (i * width / 10), (height / 7) * 3, width /24, 60, "#CD947A", "#71587E", 0);
+                    stepsSnare.push(sts);
+                    let sth = new stepUnit(width / 8 + (i * width / 10), (height / 7) * 4, width /24, 60, "#CD947A", "#71587E", 0);
+                    stepsHat.push(sth);
+                }
+                d1 = new drumVoice('sine', 1, 0, 20, .002, .7);
+                d2 = new drumVoice('sine', 60, 1, 30, .002, .7);
+                d3 = new drumVoice('sine', 350, 2, 130, .0, .01);
+                d4 = new drumVoice('sine', 350, 3, 130, .0, .01);
+                d1.initVoice(actx);
+                d2.initVoice(actx);
+                d3.initVoice(actx);
+                d4.initVoice(actx);
             }
-            d1 = new drumVoice('sine', 1, 0, 20, .002, .7);
-            d2 = new drumVoice('sine', 60, 1, 30, .002, .7);
-            d3 = new drumVoice('sine', 350, 2, 130, .0, .01);
-            d4 = new drumVoice('sine', 350, 3, 130, .0, .01);
-            d1.initVoice(actx);
-            d2.initVoice(actx);
-            d3.initVoice(actx);
-            d4.initVoice(actx);
-
 
         }
 
         function draw() {
+
             background(200);
-            drawGui();
+            // drawGui();
             playSequence();
-            let mf = map(mouseX, 0, width, 40, 700);
+
+            for (st in stepsBass) {
+                stepsBass[st].draw("#CD947A", "#71587E", 0);
+                stepsKick[st].draw("#CD947A", "#71587E", 0);
+                stepsSnare[st].draw("#CD947A", "#71587E", 0);
+                stepsHat[st].draw("#CD947A", "#71587E", 0);
+
+            }
+
+
+            s.draw("#CD947A", "#71587E", 0);
+            b1.draw("#CD947A", "#71587E", 0);
+            filter.draw("#CD947A", "#71587E",0);
 
 
 
 
-            d4.filty(mf, 1);
+            let flv = filter.getValue(30,2000,0);
+            d4.filty(flv, 1);
 
+        }
+        function windowResized() {
+            resizeCanvas(width, height);
         }
 
         function playSequence() {
-            click = s.val;
+            click = s.getValue(50, 4, 0);
 
             if (clock > click) {
                 clock = 0;
@@ -107,23 +136,22 @@
 
                 currentStep = (currentStep + 1) % 8;
 
-                if (stepsKick[currentStep].val == true) {
+                if (stepsKick[currentStep].getTog() == true) {
                     d1.trig();
                 }
-                if (stepsBass[currentStep].val == true) {
+
+                if (stepsBass[currentStep].getTog() == true) {
                     d4.trig();
                     let randa = random(60, 300);
                     let randb = random(0.0, 1);
 
                     d4.pitchy(randa, randb);
 
-
-
                 }
-                if (stepsSnare[currentStep].val == true) {
+                if (stepsSnare[currentStep].getTog() == true) {
                     d2.trig();
                 }
-                if (stepsHat[currentStep].val == true) {
+                if (stepsHat[currentStep].getTog() == true) {
                     d3.trig();
                 }
 
@@ -131,11 +159,11 @@
 
             }
 
-
-            text("bpm:" + floor(((60 / click) * 1000) / 64), 350, 20);
-            text("current beat:" + (currentStep + 1), 420, 20);
-
-            if (b1.val) {
+            push();
+            text("bpm:" + floor(((60 / click) * 1000) / 64), (width/ 8)*7, 20);
+   
+            pop();
+            if (b1.value) {
                 clock = clock + 1;
                 userStartAudio();
 

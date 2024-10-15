@@ -67,7 +67,7 @@ class moogLadder extends AudioWorkletProcessor {
 
 
         let c = 2.0 * parameters.frequency / parameters.sr;
-        let p = c * (1.8 - 0.8 * c);
+        let p = c * (1.8 - (0.8 * c));
         let k = 2.0 * Math.sin(c * Math.PI * 0.5) - 1.0;
         let t1 = (1.0 - p) * 1.386249;
         let t2 = 12.0 + t1 * t1;

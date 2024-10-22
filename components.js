@@ -15,6 +15,7 @@ class slidey {
     this.width = w;
     this.height = h;
     this.value = val;
+    this.pv = 0;
   }
 
   draw(ca, cb, cc) {
@@ -25,14 +26,14 @@ class slidey {
 
     for (let i = 0; i < this.width; i++) {
       fill(cc);
-      rect(this.xpos + i + 2, this.ypos + 2, 1, this.height);
+      rect(this.xpos + i + 2, this.ypos + 2, 6, this.height);
 
       fill(ca);
-      rect(this.xpos + i, this.ypos, 1, this.height);
+      rect(this.xpos + i, this.ypos, 6, this.height);
       let p = floor(map(this.value, 0, 1, 0, this.width));
       if (p <= i) {
         fill(cb);
-        rect(this.xpos + i, this.ypos, 1, this.height);
+        rect(this.xpos + i, this.ypos, 6, this.height);
       }
     }
 
@@ -59,6 +60,15 @@ class slidey {
     pop();
   }
 
+  cache(){
+    if(this.pv!=this.value){
+      this.pv=this.value;
+      return true
+    }else{
+      return false;
+    }
+  }
+
   getValue(omin_, omax_, s_) {
     this.omax = omax_;
     this.omin = omin_;
@@ -72,6 +82,7 @@ class slidey {
         this.map = floor(map(this.value, 0, 1, this.omin, this.omax));
         break;
     }
+
     return this.map;
   }
 }
@@ -91,6 +102,16 @@ class tog {
     this.radiusP = this.size;
     this.xPos = xp;
     this.base = yp;
+    this.pv = 0;
+  }
+
+  cache(){
+    if(this.pv!=this.value){
+      this.pv=this.value;
+      return true
+    }else{
+      return false;
+    }
   }
 
   draw(ca, cb, cc) {
@@ -127,9 +148,9 @@ class tog {
 }
 class stepUnit {
   constructor(x, y, w, h) {
-    this.togg = new tog(x, y, (w / 8)*7, h);
-    this.sldA = new slidey(x - w /1.5, y + h / 2, w*1.5, h / 3, 0);
-    this.sldB = new slidey(x - w /1.5, y + h, w*1.5, h / 3, 0);
+    this.togg = new tog(x+w/4, y, (w / 2), h);
+    this.sldA = new slidey(x - w /2, y + h / 2, w*1.5, h / 3, 0);
+    this.sldB = new slidey(x - w /2, y + h, w*1.5, h / 3, 0);
 
     // <color name="Persian orange" hex="CD947A" r="205" g="148" b="122" />
     // <color name="Chinese Violet" hex="71587E" r="113" g="88" b="126" />
@@ -158,170 +179,170 @@ class stepUnit {
   }
 }
 
-class drumVoice {
-  constructor(type, freq, modType, modAmt, attack, decay) {
-    this.osc = new p5.Oscillator("sine");
-    this.type = type;
-    this.freq = freq;
-    this.modType = modType;
-    this.modAmt = modAmt;
-    this.attack = attack;
-    this.decay = decay;
-    this.modulator = new p5.Oscillator("sine");
-    this.env = new p5.Envelope(
-      this.attack,
-      this.modAmt,
-      this.decay,
-      this.modAmt
-    );
-    this.penv = new p5.Envelope(
-      this.attack,
-      this.modAmt,
-      this.decay,
-      this.modAmt
-    );
-    this.n = new p5.Noise("white");
-    this.delay = new p5.Delay();
-    this.hp = new p5.HighPass();
-    this.bf = 200;
-    this.mf = 100;
-    this.bfreq;
-    this.mfreq;
-    this.r = 0.8;
-    this.drift;
-    this.amp;
-    this.workletNodeSaw;
-    this.workletNodeMoog;
-    this.gain = new p5.Gain();
-    this.gain.disconnect();
-  }
+// class drumVoice {
+//   constructor(type, freq, modType, modAmt, attack, decay) {
+//     this.osc = new p5.Oscillator("sine");
+//     this.type = type;
+//     this.freq = freq;
+//     this.modType = modType;
+//     this.modAmt = modAmt;
+//     this.attack = attack;
+//     this.decay = decay;
+//     this.modulator = new p5.Oscillator("sine");
+//     this.env = new p5.Envelope(
+//       this.attack,
+//       this.modAmt,
+//       this.decay,
+//       this.modAmt
+//     );
+//     this.penv = new p5.Envelope(
+//       this.attack,
+//       this.modAmt,
+//       this.decay,
+//       this.modAmt
+//     );
+//     this.n = new p5.Noise("white");
+//     this.delay = new p5.Delay();
+//     this.hp = new p5.HighPass();
+//     this.bf = 200;
+//     this.mf = 100;
+//     this.bfreq;
+//     this.mfreq;
+//     this.r = 0.8;
+//     this.drift;
+//     this.amp;
+//     this.workletNodeSaw;
+//     this.workletNodeMoog;
+//     this.gain = new p5.Gain();
+//     this.gain.disconnect();
+//   }
 
-  initVoice(actx) {
-    switch (this.modType) {
-      case 0:
-        this.osc.start();
-        this.osc.type = this.type;
-        this.osc.amp(0.7);
-        this.env.setADSR(0.0, 0, this.decay, 0.1);
-        this.penv.setADSR(this.attack, 0.4, this.decay, 0.1);
-        this.modulator.amp(this.modAmt);
-        this.penv.scale(this.modAmt);
-        this.osc.freq(this.penv);
-        this.env.play(this.osc);
-        break;
-      case 1:
-        this.osc.start();
-        this.n.start();
-        this.osc.type = this.type;
-        this.osc.amp(0.7);
-        this.env.setADSR(0.0, 0.02, this.decay, 0.0093);
-        this.penv.setADSR(this.attack, 0.4, this.decay, 0.1);
-        this.modulator.amp(this.modAmt);
-        this.penv.scale(this.modAmt);
-        this.osc.freq(this.penv);
-        this.env.play(this.n);
-        this.env.play(this.osc);
-        break;
-      case 2:
-        this.osc.start();
-        this.n.start();
-        this.modulator.start();
-        this.osc.type = this.type;
-        this.osc.amp(0.06);
+//   initVoice(actx) {
+//     switch (this.modType) {
+//       case 0:
+//         this.osc.start();
+//         this.osc.type = this.type;
+//         this.osc.amp(0.7);
+//         this.env.setADSR(0.0, 0, this.decay, 0.1);
+//         this.penv.setADSR(this.attack, 0.4, this.decay, 0.1);
+//         this.modulator.amp(this.modAmt);
+//         this.penv.scale(this.modAmt);
+//         this.osc.freq(this.penv);
+//         this.env.play(this.osc);
+//         break;
+//       case 1:
+//         this.osc.start();
+//         this.n.start();
+//         this.osc.type = this.type;
+//         this.osc.amp(0.7);
+//         this.env.setADSR(0.0, 0.02, this.decay, 0.0093);
+//         this.penv.setADSR(this.attack, 0.4, this.decay, 0.1);
+//         this.modulator.amp(this.modAmt);
+//         this.penv.scale(this.modAmt);
+//         this.osc.freq(this.penv);
+//         this.env.play(this.n);
+//         this.env.play(this.osc);
+//         break;
+//       case 2:
+//         this.osc.start();
+//         this.n.start();
+//         this.modulator.start();
+//         this.osc.type = this.type;
+//         this.osc.amp(0.06);
 
-        this.osc.disconnect();
-        this.n.disconnect();
-        this.modulator.disconnect();
+//         this.osc.disconnect();
+//         this.n.disconnect();
+//         this.modulator.disconnect();
 
-        this.env.setADSR(0.006, 0.02, this.decay, 0.193);
-        this.penv.setADSR(this.attack, 0.4, this.decay, 0.8);
-        this.modulator.freq(this.modAmt);
-        this.modulator.amp(0.06);
-        this.penv.scale(this.modAmt);
-        this.osc.freq(this.modulator);
-        this.modulator.connect(this.hp);
-        this.osc.connect(this.hp);
+//         this.env.setADSR(0.006, 0.02, this.decay, 0.193);
+//         this.penv.setADSR(this.attack, 0.4, this.decay, 0.8);
+//         this.modulator.freq(this.modAmt);
+//         this.modulator.amp(0.06);
+//         this.penv.scale(this.modAmt);
+//         this.osc.freq(this.modulator);
+//         this.modulator.connect(this.hp);
+//         this.osc.connect(this.hp);
 
-        this.n.connect(this.hp);
+//         this.n.connect(this.hp);
 
-        this.hp.freq(7000);
+//         this.hp.freq(7000);
 
-        this.env.play(this.modulator);
-        this.env.play(this.hp);
-        this.env.play(this.osc);
+//         this.env.play(this.modulator);
+//         this.env.play(this.hp);
+//         this.env.play(this.osc);
 
-        this.delay.process(this.hp, 0.005, 0.28, 9000);
+//         this.delay.process(this.hp, 0.005, 0.28, 9000);
 
-        this.env.mult(0.2);
+//         this.env.mult(0.2);
 
-        this.delay.disconnect();
+//         this.delay.disconnect();
 
-        this.gain.setInput(this.delay, this.env);
-        this.gain.connect();
-        this.gain.amp(0.02);
+//         this.gain.setInput(this.delay, this.env);
+//         this.gain.connect();
+//         this.gain.amp(0.02);
 
-        break;
-      case 3:
-        this.env.setADSR(0.01, 0.1, 0.02, 0.12);
+//         break;
+//       case 3:
+//         this.env.setADSR(0.01, 0.1, 0.02, 0.12);
 
-        actx.audioWorklet
-          .addModule("moogLadder.js")
-          .then(() => {
-            this.workletNodeMoog = new AudioWorkletNode(actx, "moogladder");
+//         actx.audioWorklet
+//           .addModule("moogLadder.js")
+//           .then(() => {
+//             this.workletNodeMoog = new AudioWorkletNode(actx, "moogladder");
 
-            console.log(this.workletNodeMoog);
-            this.mfreq = this.workletNodeMoog.parameters.get("frequency");
-            this.r = this.workletNodeMoog.parameters.get("resonance");
-            this.mfreq.setValueAtTime(this.mf, actx.currentTime);
-            this.r.setValueAtTime(0.5, actx.currentTime);
-          })
-          .catch((err) => {
-            console.error("Failed to load AudioWorklet module:", err);
-          });
+//             console.log(this.workletNodeMoog);
+//             this.mfreq = this.workletNodeMoog.parameters.get("frequency");
+//             this.r = this.workletNodeMoog.parameters.get("resonance");
+//             this.mfreq.setValueAtTime(this.mf, actx.currentTime);
+//             this.r.setValueAtTime(0.5, actx.currentTime);
+//           })
+//           .catch((err) => {
+//             console.error("Failed to load AudioWorklet module:", err);
+//           });
 
-        actx.audioWorklet
-          .addModule("doubleSaw.js")
-          .then(() => {
-            this.workletNodeSaw = new AudioWorkletNode(actx, "doublesaw");
-            this.workletNodeSaw.disconnect();
-            this.workletNodeSaw.connect(this.workletNodeMoog);
-            // this.workletNodeMoog.disconnect();
-            this.workletNodeMoog.connect(this.hp);
-            this.hp.freq(20);
-            this.env.play(this.hp);
-            console.log(this.workletNodeSaw);
-            this.bfreq = this.workletNodeSaw.parameters.get("frequency");
-            this.drift = this.workletNodeSaw.parameters.get("drift");
-            this.amp = this.workletNodeSaw.parameters.get("amplitude");
-            this.bfreq.setValueAtTime(this.bf, actx.currentTime);
-            this.drift.setValueAtTime(5, actx.currentTime);
-          })
-          .catch((err) => {
-            console.error("Failed to load AudioWorklet module:", err);
-          });
+//         actx.audioWorklet
+//           .addModule("doubleSaw.js")
+//           .then(() => {
+//             this.workletNodeSaw = new AudioWorkletNode(actx, "doublesaw");
+//             this.workletNodeSaw.disconnect();
+//             this.workletNodeSaw.connect(this.workletNodeMoog);
+//             // this.workletNodeMoog.disconnect();
+//             this.workletNodeMoog.connect(this.hp);
+//             this.hp.freq(20);
+//             this.env.play(this.hp);
+//             console.log(this.workletNodeSaw);
+//             this.bfreq = this.workletNodeSaw.parameters.get("frequency");
+//             this.drift = this.workletNodeSaw.parameters.get("drift");
+//             this.amp = this.workletNodeSaw.parameters.get("amplitude");
+//             this.bfreq.setValueAtTime(this.bf, actx.currentTime);
+//             this.drift.setValueAtTime(5, actx.currentTime);
+//           })
+//           .catch((err) => {
+//             console.error("Failed to load AudioWorklet module:", err);
+//           });
 
-        break;
-    }
-  }
+//         break;
+//     }
+//   }
 
-  trig() {
-    this.env.play();
-    this.penv.play();
-  }
+//   trig() {
+//     this.env.play();
+//     this.penv.play();
+//   }
 
-  pitchy(f, t) {
-    this.bfreq = this.workletNodeSaw.parameters.get("frequency");
-    this.bf = f;
-    this.bfreq.exponentialRampToValueAtTime(f, actx.currentTime + t);
-  }
+//   pitchy(f, t) {
+//     this.bfreq = this.workletNodeSaw.parameters.get("frequency");
+//     this.bf = f;
+//     this.bfreq.exponentialRampToValueAtTime(f, actx.currentTime + t);
+//   }
 
-  filty(f, t) {
-    if (this.workletNodeMoog) {
-      this.mf = f;
-      this.mfreq = this.workletNodeMoog.parameters.get("frequency");
-      this.r = this.workletNodeMoog.parameters.get("resonance");
-      this.mfreq.exponentialRampToValueAtTime(f, actx.currentTime + t);
-      this.r.setValueAtTime(0.5, actx.currentTime);
-    }
-  }
-}
+//   filty(f, t) {
+//     if (this.workletNodeMoog) {
+//       this.mf = f;
+//       this.mfreq = this.workletNodeMoog.parameters.get("frequency");
+//       this.r = this.workletNodeMoog.parameters.get("resonance");
+//       this.mfreq.exponentialRampToValueAtTime(f, actx.currentTime + t);
+//       this.r.setValueAtTime(0.5, actx.currentTime);
+//     }
+//   }
+// }

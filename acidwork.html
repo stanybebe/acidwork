@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>acidwork</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
+    <script src="/components.js"></script>
+    <script src="p5.csound.js"></script>
+
+
+<body style="width: auto!important; overflow: hidden!important">
+    <div id="myCanvas" style="width: 100% !important;">
+
+
+
+        <script>
+
+
+
+            let clock = 0;
+            let click = 0;
+            let flag = false;
+            let step = [0, 0, 0, 0, 0, 0, 0, 0];
+            let st;
+            let gui;
+            let b1;
+            let csound = null;
+            let seq;
+            let s;
+            let stepsBass = [];
+            let stepsKick = [];
+            let stepsSnare = [];
+            let stepsHat = [];
+            let currentStep = 0;
+            let d1;
+            let d2;
+            let d3;
+            let d4;
+            let actx;
+            let freq;
+            let amp;
+            let sr;
+            let drift;
+            let workletNode;
+            let filt;
+            let scale;
+            let transp;
+            let canvas;
+            let prevw;
+            let widthv;
+            let pt = 0;
+            let mj7s = [0, 2, 4, 5, 7, 9, 11, 12];
+            let mn7s = [0, 2, 3, 5, 7, 8, 10, 12];
+            let dm7s = [0, 2, 4, 5, 7, 9, 10, 12];
+            let hd7s = [0, 1, 3, 5, 6, 8, 10, 12];
+            let mj6s = [0, 2, 4, 5, 7, 9, 11, 12];
+            let mn6s = [0, 2, 3, 5, 7, 9, 10, 12];
+            let db9s = [0, 1, 4, 5, 7, 8, 10, 12];
+            let alds = [0, 2, 4, 6, 7, 9, 10, 12];
+            let augs = [0, 2, 4, 6, 8, 10, 12, 14];
+            let dims = [0, 3, 6, 9, 12, 15, 18, 21]
+            const scales = [mj7s,mn7s,dm7s,hd7s,mj6s,mn6s,db9s,alds,augs,dims];
+
+            const mtofarray = [
+                0, 8.661957, 9.177024, 9.722718, 10.3, 10.913383, 11.562325, 12.25, 12.978271, 13.75, 14.567617,
+                15.433853, 16.351599, 17.323914, 18.354048, 19.445436, 20.601723, 21.826765, 23.124651, 24.5,
+                25.956543, 27.5, 29.135235, 30.867706, 32.703197, 34.647827, 36.708096, 38.890873, 41.203445,
+                43.65353, 46.249302, 49., 51.913086, 55., 58.27047, 61.735413, 65.406395, 69.295654, 73.416191,
+                77.781746, 82.406891, 87.30706, 92.498604, 97.998856, 103.826172, 110., 116.540939, 123.470825,
+                130.81279, 138.591309, 146.832382, 155.563492, 164.813782, 174.61412, 184.997208, 195.997711,
+                207.652344, 220., 233.081879, 246.94165, 261.62558, 277.182617, 293.664764, 311.126984,
+                329.627563, 349.228241, 369.994415, 391.995422, 415.304688, 440., 466.163757, 493.883301,
+                523.25116, 554.365234, 587.329529, 622.253967, 659.255127, 698.456482, 739.988831, 783.990845,
+                830.609375, 880., 932.327515, 987.766602, 1046.502319, 1108.730469, 1174.659058, 1244.507935,
+                1318.510254, 1396.912964, 1479.977661, 1567.981689, 1661.21875, 1760., 1864.655029, 1975.533203,
+                2093.004639, 2217.460938, 2349.318115, 2489.015869, 2637.020508, 2793.825928, 2959.955322,
+                3135.963379, 3322.4375, 3520., 3729.31, 3951.066406, 4186.009277, 4434.921875, 4698.63623,
+                4978.031738, 5274.041016, 5587.651855, 5919.910645, 6271.926758, 6644.875, 7040., 7458.620117,
+                7902.132812, 8372.018555, 8869.84375, 9397.272461, 9956.063477, 10548.082031, 11175.303711,
+                11839.821289, 12543.853516, 13289.75
+            ];
+
+
+
+            async function preload() {
+    csound = await Csound.create({options:['-odac', '--0dbfs=1']});
+
+    await csound.evalCode(`
+
+   ;create tables 1-9
+    indx = 1
+    while indx < 9 do
+        ifn = ftgen(indx, 0, ${8}, 2, 0)
+        indx += 1
+    od
+
+    giNotes[] = fillarray(800, 700, 600, 500, 400, 300, 200, 100)
+
+    opcode triggerIfHitEnabled, 0,ki
+        kIndex, iTable xin
+        kValue = table:k(kIndex, iTable)
+        kDur = chnget:k("duration")
+        if kValue == 1 then
+            schedulek(2, 0, kDur, giNotes[iTable-1])
+        endif
+        if iTable > 1 then
+            triggerIfHitEnabled(kIndex,iTable-1)
+        endif
+    endop
+
+    instr 1
+        kIndex init -1
+        kBpm = chnget:k("BPM")
+        if chnget:k("play") == 1 then      
+            chnset:k(kIndex, "index")
+            if metro(kBpm/60) == 1 then
+                triggerIfHitEnabled(kIndex, 8)
+                kIndex = kIndex < 15 ? kIndex+1 : 0
+            endif      
+        endif
+    endin
+
+    schedule(1, 0, 99999)
+    schedule(3, 0, 99999)
+
+    instr 2
+        kEnv = expseg:k(0.001, 0.01, 1/16, p3, 0.001)
+        aSig = oscili:a(kEnv, p4)
+        aLeft, aRight pan2 aSig, random:i(0, 1)
+        chnmix aLeft, "mixL"
+        chnmix aRight, "mixR"
+        out(aLeft, aRight)
+    endin
+
+    instr 3
+        kFdbk = chnget:k("reverbTime")
+        aSigL = chnget:a("mixL")
+        aSigR = chnget:a("mixR")
+        aL, aR reverbsc aSigL, aSigR, kFdbk, 500
+        out(aL, aR)
+        chnclear "mixL", "mixR"
+    endin
+  `);
+
+    await Csound.startAudio();
+
+    await csound.setControlChannel("BPM", 240);
+    await csound.setControlChannel("play", 0);
+    await csound.setControlChannel("duration", 0.5);
+
+    let getIndex = setInterval(async function () {
+        currentPos = await csound.getControlChannel("index");
+    }, 10);
+
+    csound.on("stop", () => clearInterval(getIndex));
+
+}
+
+
+
+
+
+            function setup() {
+                actx = getAudioContext();
+
+                if (actx) {
+                    startTime = actx.currentTime; // Record the start time
+
+                    var canvasDiv = document.getElementById('myCanvas');
+                    widthv = myCanvas.offsetWidth;
+                    prevw = widthv;
+
+                    canvas = createCanvas(widthv, windowHeight, WEBGL);
+                    canvas.style('display', 'block');  // Removes extra margins
+                    canvas.parent("myCanvas");
+
+                    b1 = new tog((width / 4) * 2, height / 30, 20, 20, "#CD947A", "#71587E");
+
+                    getAudioContext().suspend();
+
+                    // <color name="Persian orange" hex="CD947A" r="205" g="148" b="122" />
+                    // <color name="Chinese Violet" hex="71587E" r="113" g="88" b="126" />
+                    // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
+                    // <color name="Hunyadi yellow" hex="F0B650" r="240" g="182" b="80" />
+                    // <color name="Keppel" hex="67B5A0" r="103" g="181" b="160" />
+
+
+
+                    s = new slidey(width - ((width / 4) * 1.6), height / 16, width / 3, 30, 0, "#CD947A", "#71587E", 0);
+                    filter = new slidey(width / 4, height * .82, width / 2, 15, 0, "#CD947A", "#71587E", 0);
+                    scale = new slidey(width / 4, height * .86, width / 2, 15, 0, "#CD947A", "#71587E", 0);
+                    transp = new slidey(width / 4, height * .9, width / 2, 15, 0, "#CD947A", "#71587E", 0);
+                    for (var i = 0; i < 8; i++) {
+                        let stb = new stepUnit(width / 8 + (i * width / 10), height / 6, width / 24, 60, "#CD947A", "#71587E", 0);
+                        stepsBass.push(stb);
+                        let stk = new stepUnit(width / 8 + (i * width / 10), (height / 6) * 2, width / 24, 60, "#CD947A", "#71587E", 0);
+                        stepsKick.push(stk);
+                        let sts = new stepUnit(width / 8 + (i * width / 10), (height / 6) * 3, width / 24, 60, "#CD947A", "#71587E", 0);
+                        stepsSnare.push(sts);
+                        let sth = new stepUnit(width / 8 + (i * width / 10), (height / 6) * 4, width / 24, 60, "#CD947A", "#71587E", 0);
+                        stepsHat.push(sth);
+                    }
+                    // d1 = new drumVoice('sine', 1, 0, 20, .002, .7);
+                    // d2 = new drumVoice('sine', 60, 1, 30, .002, .7);
+                    // d3 = new drumVoice('sine', 350, 2, 130, .0, .01);
+                    // d4 = new drumVoice('sine', 350, 3, 130, .0, .01);
+                    // d1.initVoice(actx);
+                    // d2.initVoice(actx);
+                    // d3.initVoice(actx);
+                    // d4.initVoice(actx);
+                    for (st in stepsBass) {
+                        stepsBass[st].draw("#CD947A", "#71587E", 0);
+                        stepsKick[st].draw("#CD947A", "#71587E", 0);
+                        stepsSnare[st].draw("#CD947A", "#71587E", 0);
+                        stepsHat[st].draw("#CD947A", "#71587E", 0);
+
+                    }
+
+                }
+
+            }
+
+            function draw() {
+                if (prevw != widthv) {
+                    canvas.width = myCanvas.offsetWidth;
+                }
+                translate(-width / 2, -height / 2)
+                background("#67B5A0");
+                // drawGui();
+
+
+
+                for (st in stepsBass) {
+                    stepsBass[st].draw("#CD947A", "#71587E", 0);
+                    stepsKick[st].draw("#CD947A", "#71587E", 0);
+                    stepsSnare[st].draw("#CD947A", "#71587E", 0);
+                    stepsHat[st].draw("#CD947A", "#71587E", 0);
+
+                }
+
+
+                s.draw("#CD947A", "#71587E", 0);
+                b1.draw("#CD947A", "#71587E", 0);
+                filter.draw("#CD947A", "#71587E", 0);
+                scale.draw("#CD947A", "#71587E", 0);
+                transp.draw("#CD947A", "#71587E", 0);
+
+
+
+
+                let flv = filter.getValue(30, 2000, 0);
+             
+               
+
+            }
+            function windowResized() {
+                resizeCanvas(widthv, height);
+            }
+
+
+
+            function playSequence() {
+
+                click = s.getValue(20, 100, 0);
+
+
+
+                if (clock > 60/click) {
+                    clock = 0;
+
+
+                    currentStep = (currentStep + 1) % 8;
+
+                    if (stepsKick[currentStep].getTog() == true) {
+                    
+                    }
+
+                    if (stepsBass[currentStep].getTog() == true) {
+                 
+
+                      
+                        let knoba = stepsBass[currentStep].sldA.getValue(0,7,1)
+                        let knobb = stepsBass[currentStep].sldA.getValue(0,.5,0)
+                        
+                        // d4.pitchy(parseFloat(mtofarray[transp.getValue(23,59,1)+scales[scale.getValue(0,9,1)][knoba]]), knobb);
+                    }
+                    if (stepsSnare[currentStep].getTog() == true) {
+                     
+                    }
+                    if (stepsHat[currentStep].getTog() == true) {
+               
+                    }
+
+
+
+                }
+
+                push();
+                // text("bpm:" + floor(((60 / click) * 1000) / 64), (width/ 8)*7, 20);
+
+                pop();
+                if (b1.value) {
+                    let ct = floor(performance.now());
+
+
+          
+                    clock = clock + 1;
+              
+
+
+
+                    userStartAudio();
+
+
+                } else {
+                    flag = false;
+                    clock = 0;
+                    currentStep = 0;
+                }
+
+                if (currentStep == 7 && clock >= click) {
+                    flag = true;
+
+
+                }
+                else { flag = false; }
+
+
+
+                if (flag == true) {
+                    flag = false;
+
+
+                }
+
+            }
+
+
+          
+
+
+
+
+        </script>
+    </div>
+
+</body>
+
+</html>

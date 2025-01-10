@@ -1,0 +1,547 @@
+{
+    "name": "untitled",
+    "filename": "untitled.dsp",
+    "version": "2.78.0",
+    "compile_options": "-lang wasm-i -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -single -ftz 2",
+    "library_list": [
+        "/usr/share/faust/stdfaust.lib",
+        "/usr/share/faust/oscillators.lib",
+        "/usr/share/faust/basics.lib",
+        "/usr/share/faust/maths.lib",
+        "/usr/share/faust/platform.lib",
+        "/usr/share/faust/envelopes.lib",
+        "/usr/share/faust/filters.lib",
+        "/usr/share/faust/signals.lib",
+        "/usr/share/faust/noises.lib"
+    ],
+    "include_pathnames": [
+        "/share/faust",
+        "/usr/local/share/faust",
+        "/usr/share/faust",
+        "."
+    ],
+    "size": 262596,
+    "code": "kCGZAaQpHw==",
+    "inputs": 0,
+    "outputs": 2,
+    "meta": [
+        {
+            "basics.lib/counter:author": "Stephane Letz"
+        },
+        {
+            "basics.lib/name": "Faust Basic Element Library"
+        },
+        {
+            "basics.lib/tabulateNd": "Copyright (C) 2023 Bart Brouns <bart@magnetophon.nl>"
+        },
+        {
+            "basics.lib/version": "1.21.0"
+        },
+        {
+            "compile_options": "-lang wasm-i -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -single -ftz 2"
+        },
+        {
+            "envelopes.lib/adsr:author": "Yann Orlarey and Andrey Bundin"
+        },
+        {
+            "envelopes.lib/ar:author": "Yann Orlarey, Stéphane Letz"
+        },
+        {
+            "envelopes.lib/author": "GRAME"
+        },
+        {
+            "envelopes.lib/copyright": "GRAME"
+        },
+        {
+            "envelopes.lib/license": "LGPL with exception"
+        },
+        {
+            "envelopes.lib/name": "Faust Envelope Library"
+        },
+        {
+            "envelopes.lib/version": "1.3.0"
+        },
+        {
+            "filename": "untitled.dsp"
+        },
+        {
+            "filters.lib/fir:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/fir:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/fir:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/iir:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/iir:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/iir:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/lowpass0_highpass1": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/name": "Faust Filters Library"
+        },
+        {
+            "filters.lib/resonhp:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/resonhp:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/resonhp:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/resonlp:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/resonlp:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/resonlp:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/tf2:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/tf2:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/tf2:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/tf2s:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/tf2s:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/tf2s:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/version": "1.6.0"
+        },
+        {
+            "maths.lib/author": "GRAME"
+        },
+        {
+            "maths.lib/copyright": "GRAME"
+        },
+        {
+            "maths.lib/license": "LGPL with exception"
+        },
+        {
+            "maths.lib/name": "Faust Math Library"
+        },
+        {
+            "maths.lib/version": "2.8.1"
+        },
+        {
+            "name": "untitled"
+        },
+        {
+            "noises.lib/name": "Faust Noise Generator Library"
+        },
+        {
+            "noises.lib/version": "1.4.1"
+        },
+        {
+            "oscillators.lib/name": "Faust Oscillator Library"
+        },
+        {
+            "oscillators.lib/saw2ptr:author": "Julius O. Smith III"
+        },
+        {
+            "oscillators.lib/saw2ptr:license": "STK-4.3"
+        },
+        {
+            "oscillators.lib/version": "1.5.1"
+        },
+        {
+            "platform.lib/name": "Generic Platform Library"
+        },
+        {
+            "platform.lib/version": "1.3.0"
+        },
+        {
+            "signals.lib/name": "Faust Signal Routing Library"
+        },
+        {
+            "signals.lib/version": "1.6.0"
+        }
+    ],
+    "ui": [
+        {
+            "type": "vgroup",
+            "label": "untitled",
+            "items": [
+                {
+                    "type": "checkbox",
+                    "label": "c1",
+                    "varname": "fCheckbox0",
+                    "shortname": "c1",
+                    "address": "/untitled/c1",
+                    "index": 262252
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c2",
+                    "varname": "fCheckbox1",
+                    "shortname": "c2",
+                    "address": "/untitled/c2",
+                    "index": 262256
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c3",
+                    "varname": "fCheckbox2",
+                    "shortname": "c3",
+                    "address": "/untitled/c3",
+                    "index": 262260
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c4",
+                    "varname": "fCheckbox3",
+                    "shortname": "c4",
+                    "address": "/untitled/c4",
+                    "index": 262264
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c5",
+                    "varname": "fCheckbox4",
+                    "shortname": "c5",
+                    "address": "/untitled/c5",
+                    "index": 262268
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c6",
+                    "varname": "fCheckbox5",
+                    "shortname": "c6",
+                    "address": "/untitled/c6",
+                    "index": 262272
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c7",
+                    "varname": "fCheckbox6",
+                    "shortname": "c7",
+                    "address": "/untitled/c7",
+                    "index": 262276
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c8",
+                    "varname": "fCheckbox7",
+                    "shortname": "c8",
+                    "address": "/untitled/c8",
+                    "index": 262280
+                },
+                {
+                    "type": "hslider",
+                    "label": "filt",
+                    "varname": "fHslider11",
+                    "shortname": "filt",
+                    "address": "/untitled/filt",
+                    "index": 262320,
+                    "init": 200,
+                    "min": 30,
+                    "max": 1000,
+                    "step": 0.1
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc1",
+                    "varname": "fCheckbox8",
+                    "shortname": "kc1",
+                    "address": "/untitled/kc1",
+                    "index": 262356
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc2",
+                    "varname": "fCheckbox9",
+                    "shortname": "kc2",
+                    "address": "/untitled/kc2",
+                    "index": 262360
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc3",
+                    "varname": "fCheckbox10",
+                    "shortname": "kc3",
+                    "address": "/untitled/kc3",
+                    "index": 262364
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc4",
+                    "varname": "fCheckbox11",
+                    "shortname": "kc4",
+                    "address": "/untitled/kc4",
+                    "index": 262368
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc5",
+                    "varname": "fCheckbox12",
+                    "shortname": "kc5",
+                    "address": "/untitled/kc5",
+                    "index": 262372
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc6",
+                    "varname": "fCheckbox13",
+                    "shortname": "kc6",
+                    "address": "/untitled/kc6",
+                    "index": 262376
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc7",
+                    "varname": "fCheckbox14",
+                    "shortname": "kc7",
+                    "address": "/untitled/kc7",
+                    "index": 262380
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc8",
+                    "varname": "fCheckbox15",
+                    "shortname": "kc8",
+                    "address": "/untitled/kc8",
+                    "index": 262384
+                },
+                {
+                    "type": "hslider",
+                    "label": "kstl",
+                    "varname": "fHslider12",
+                    "shortname": "kstl",
+                    "address": "/untitled/kstl",
+                    "index": 262352,
+                    "init": 8,
+                    "min": 1,
+                    "max": 8,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s1",
+                    "varname": "fHslider3",
+                    "shortname": "s1",
+                    "address": "/untitled/s1",
+                    "index": 262204,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s2",
+                    "varname": "fHslider4",
+                    "shortname": "s2",
+                    "address": "/untitled/s2",
+                    "index": 262208,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s3",
+                    "varname": "fHslider5",
+                    "shortname": "s3",
+                    "address": "/untitled/s3",
+                    "index": 262212,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s4",
+                    "varname": "fHslider6",
+                    "shortname": "s4",
+                    "address": "/untitled/s4",
+                    "index": 262216,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s5",
+                    "varname": "fHslider7",
+                    "shortname": "s5",
+                    "address": "/untitled/s5",
+                    "index": 262220,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s6",
+                    "varname": "fHslider8",
+                    "shortname": "s6",
+                    "address": "/untitled/s6",
+                    "index": 262224,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s7",
+                    "varname": "fHslider9",
+                    "shortname": "s7",
+                    "address": "/untitled/s7",
+                    "index": 262228,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s8",
+                    "varname": "fHslider10",
+                    "shortname": "s8",
+                    "address": "/untitled/s8",
+                    "index": 262232,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc1",
+                    "varname": "fCheckbox16",
+                    "shortname": "sc1",
+                    "address": "/untitled/sc1",
+                    "index": 262464
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc2",
+                    "varname": "fCheckbox17",
+                    "shortname": "sc2",
+                    "address": "/untitled/sc2",
+                    "index": 262468
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc3",
+                    "varname": "fCheckbox18",
+                    "shortname": "sc3",
+                    "address": "/untitled/sc3",
+                    "index": 262472
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc4",
+                    "varname": "fCheckbox19",
+                    "shortname": "sc4",
+                    "address": "/untitled/sc4",
+                    "index": 262476
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc5",
+                    "varname": "fCheckbox20",
+                    "shortname": "sc5",
+                    "address": "/untitled/sc5",
+                    "index": 262480
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc6",
+                    "varname": "fCheckbox21",
+                    "shortname": "sc6",
+                    "address": "/untitled/sc6",
+                    "index": 262484
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc7",
+                    "varname": "fCheckbox22",
+                    "shortname": "sc7",
+                    "address": "/untitled/sc7",
+                    "index": 262488
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc8",
+                    "varname": "fCheckbox23",
+                    "shortname": "sc8",
+                    "address": "/untitled/sc8",
+                    "index": 262492
+                },
+                {
+                    "type": "hslider",
+                    "label": "sstl",
+                    "varname": "fHslider13",
+                    "shortname": "sstl",
+                    "address": "/untitled/sstl",
+                    "index": 262460,
+                    "init": 8,
+                    "min": 1,
+                    "max": 8,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "stl",
+                    "varname": "fHslider2",
+                    "shortname": "stl",
+                    "address": "/untitled/stl",
+                    "index": 262200,
+                    "init": 8,
+                    "min": 1,
+                    "max": 8,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "temp",
+                    "varname": "fHslider1",
+                    "shortname": "temp",
+                    "address": "/untitled/temp",
+                    "index": 262172,
+                    "init": 120,
+                    "min": 20,
+                    "max": 200,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "tran",
+                    "varname": "fHslider0",
+                    "shortname": "tran",
+                    "address": "/untitled/tran",
+                    "index": 262164,
+                    "init": 60,
+                    "min": 24,
+                    "max": 110,
+                    "step": 1
+                }
+            ]
+        }
+    ]
+}

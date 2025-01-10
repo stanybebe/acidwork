@@ -2,26 +2,35 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>acidwork</title>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.10.0/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
+    <title>ACIDWERK</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.2/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.2/addons/p5.sound.js"></script>
     <script src="/components.js"></script>
+</head>
 
-
-<body style="width: auto!important; overflow: hidden!important">
+<body>
+    <main>
+        <span id="dsp-switch">
+            <center><button id="button-dsp">Start</button></center>
+  
+            <center>
+                <div id="myCanvas" style="width: 100% !important;"></div>
+            </center>
+        </span>
+    </main>
 
     <script>
 
 
 
-        let clock = 0;
-        let click = 0;
-        let flag = false;
-        let step = [0, 0, 0, 0, 0, 0, 0, 0];
+     
+
+        // Create audio context
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const audioContext = new AudioCtx({ latencyHint: 0.00001 });
+        audioContext.suspend();
+
+
         let st;
         let gui;
         let b1;
@@ -47,155 +56,220 @@
         let scale;
         let transp;
         let canvas;
+        let prevw;
+        let widthv;
+        let pt = 0;
+        let mj7s = [0, 2, 4, 5, 7, 9, 11, 12];
+        let mn7s = [0, 2, 3, 5, 7, 8, 10, 12];
+        let dm7s = [0, 2, 4, 5, 7, 9, 10, 12];
+        let hd7s = [0, 1, 3, 5, 6, 8, 10, 12];
+        let mj6s = [0, 2, 4, 5, 7, 9, 11, 12];
+        let mn6s = [0, 2, 3, 5, 7, 9, 10, 12];
+        let db9s = [0, 1, 4, 5, 7, 8, 10, 12];
+        let alds = [0, 2, 4, 6, 7, 9, 10, 12];
+        let augs = [0, 2, 4, 6, 8, 10, 12, 14];
+        let dims = [0, 3, 6, 9, 12, 15, 18, 21]
+        const scales = [mj7s, mn7s, dm7s, hd7s, mj6s, mn6s, db9s, alds, augs, dims];
+
+        let faustN;
+
+
+
 
 
 
 
         function setup() {
-            actx = getAudioContext();
-
-            if (actx) {
 
 
 
-                canvas = createCanvas(windowWidth-18, windowHeight-18);
-                canvas.style('display', 'block');  // Removes extra margins
 
-                b1 = new tog((width / 4) * 2, height / 30, 20, 20, "#CD947A", "#71587E");
+            var canvasDiv = document.getElementById('myCanvas');
+            widthv = myCanvas.offsetWidth;
+            prevw = widthv;
 
-                getAudioContext().suspend();
+            canvas = createCanvas(widthv, windowHeight, WEBGL);
+            canvas.style('display', 'block');  // Removes extra margins
+            canvas.parent("myCanvas");
 
-                // <color name="Persian orange" hex="CD947A" r="205" g="148" b="122" />
-                // <color name="Chinese Violet" hex="71587E" r="113" g="88" b="126" />
-                // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
-                // <color name="Hunyadi yellow" hex="F0B650" r="240" g="182" b="80" />
-                // <color name="Keppel" hex="67B5A0" r="103" g="181" b="160" />
+            b1 = new tog((width / 4) * 2, height / 30, 20, 20, "#CD947A", "#71587E");
 
 
+            // <color name="Persian orange" hex="CD947A" r="205" g="148" b="122" />
+            // <color name="Chinese Violet" hex="71587E" r="113" g="88" b="126" />
+            // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
+            // <color name="Hunyadi yellow" hex="F0B650" r="240" g="182" b="80" />
+            // <color name="Keppel" hex="67B5A0" r="103" g="181" b="160" />
 
-                s = new slidey(width - ((width / 4) * 1.6), height / 16, width /3, 30, 0, "#CD947A", "#71587E", 0);
-                filter = new slidey(width / 4, height *.7, width /2, 30, 0, "#CD947A", "#71587E", 0);
-                for (var i = 0; i < 8; i++) {
-                    let stb = new stepUnit(width / 8 + (i * width / 10), height / 7, width /24, 60, "#CD947A", "#71587E", 0);
-                    stepsBass.push(stb);
-                    let stk = new stepUnit(width / 8 + (i * width / 10), (height / 7) * 2, width /24, 60, "#CD947A", "#71587E", 0);
-                    stepsKick.push(stk);
-                    let sts = new stepUnit(width / 8 + (i * width / 10), (height / 7) * 3, width /24, 60, "#CD947A", "#71587E", 0);
-                    stepsSnare.push(sts);
-                    let sth = new stepUnit(width / 8 + (i * width / 10), (height / 7) * 4, width /24, 60, "#CD947A", "#71587E", 0);
-                    stepsHat.push(sth);
-                }
-                d1 = new drumVoice('sine', 1, 0, 20, .002, .7);
-                d2 = new drumVoice('sine', 60, 1, 30, .002, .7);
-                d3 = new drumVoice('sine', 350, 2, 130, .0, .01);
-                d4 = new drumVoice('sine', 350, 3, 130, .0, .01);
-                d1.initVoice(actx);
-                d2.initVoice(actx);
-                d3.initVoice(actx);
-                d4.initVoice(actx);
+
+
+            s = new slidey(width - ((width / 4) * 1.6), height / 16, width / 3, 30, 0, "#CD947A", "#71587E", 0);
+            filter = new slidey(width / 4, height * .82, width / 2, 15, 0, "#CD947A", "#71587E", 0);
+            scale = new slidey(width / 4, height * .86, width / 2, 15, 0, "#CD947A", "#71587E", 0);
+            transp = new slidey(width / 4, height * .9, width / 2, 15, 0, "#CD947A", "#71587E", 0);
+            for (var i = 0; i < 8; i++) {
+                let stb = new stepUnit(width / 8 + (i * width / 10), height / 6, width / 24, 60, "#CD947A", "#71587E", 0);
+                stepsBass.push(stb);
+                let stk = new stepUnit(width / 8 + (i * width / 10), (height / 6) * 2, width / 24, 60, "#CD947A", "#71587E", 0);
+                stepsKick.push(stk);
+                let sts = new stepUnit(width / 8 + (i * width / 10), (height / 6) * 3, width / 24, 60, "#CD947A", "#71587E", 0);
+                stepsSnare.push(sts);
+                // let sth = new stepUnit(width / 8 + (i * width / 10), (height / 6) * 4, width / 24, 60, "#CD947A", "#71587E", 0);
+                // stepsHat.push(sth);
             }
-
-        }
-
-        function draw() {
-
-            background(200);
-            // drawGui();
-            playSequence();
 
             for (st in stepsBass) {
                 stepsBass[st].draw("#CD947A", "#71587E", 0);
                 stepsKick[st].draw("#CD947A", "#71587E", 0);
                 stepsSnare[st].draw("#CD947A", "#71587E", 0);
-                stepsHat[st].draw("#CD947A", "#71587E", 0);
+
+
+            }
+     
+
+
+
+
+        }
+
+
+
+        function draw() {
+
+
+            if (prevw != widthv) {
+                canvas.width = myCanvas.offsetWidth;
+            }
+            translate(-width / 2, -height / 2)
+            background("#67B5A0");
+            // drawGui();
+            randb = random(0, 7);
+
+
+            for (st in stepsBass) {
+                stepsBass[st].draw("#CD947A", "#71587E", 0);
+                stepsKick[st].draw("#CD947A", "#71587E", 0);
+                stepsSnare[st].draw("#CD947A", "#71587E", 0);
+                // stepsHat[st].draw("#CD947A", "#71587E", 0);
 
             }
 
 
             s.draw("#CD947A", "#71587E", 0);
             b1.draw("#CD947A", "#71587E", 0);
-            filter.draw("#CD947A", "#71587E",0);
+            filter.draw("#CD947A", "#71587E", 0);
+            scale.draw("#CD947A", "#71587E", 0);
+            transp.draw("#CD947A", "#71587E", 0);
+            let flv = filter.getValue(30, 2000, 0);
+            if(faustN){
+            faustN.faustNode.setParamValue("/untitled/temp", s.getValue(20,200,1))
+            faustN.faustNode.setParamValue("/untitled/tran", transp.getValue(24,100,1))
+            faustN.faustNode.setParamValue("/untitled/filt", filter.getValue(30,1000,0))      
+            faustN.faustNode.setParamValue("/untitled/c1", stepsBass[0].getTog())
+            faustN.faustNode.setParamValue("/untitled/c2", stepsBass[1].getTog())
+            faustN.faustNode.setParamValue("/untitled/c3", stepsBass[2].getTog())
+            faustN.faustNode.setParamValue("/untitled/c4", stepsBass[3].getTog())
+            faustN.faustNode.setParamValue("/untitled/c5", stepsBass[4].getTog())
+            faustN.faustNode.setParamValue("/untitled/c6", stepsBass[5].getTog())
+            faustN.faustNode.setParamValue("/untitled/c7", stepsBass[6].getTog())
+            faustN.faustNode.setParamValue("/untitled/c8", stepsBass[7].getTog())
+            faustN.faustNode.setParamValue("/untitled/kc1", stepsKick[0].getTog())
+            faustN.faustNode.setParamValue("/untitled/kc2", stepsKick[1].getTog())
+            faustN.faustNode.setParamValue("/untitled/kc3", stepsKick[2].getTog())
+            faustN.faustNode.setParamValue("/untitled/kc4", stepsKick[3].getTog())
+            faustN.faustNode.setParamValue("/untitled/kc5", stepsKick[4].getTog())
+            faustN.faustNode.setParamValue("/untitled/kc6", stepsKick[5].getTog())
+            faustN.faustNode.setParamValue("/untitled/kc7", stepsKick[6].getTog())
+            faustN.faustNode.setParamValue("/untitled/kc8", stepsKick[7].getTog())
+            faustN.faustNode.setParamValue("/untitled/sc1", stepsSnare[0].getTog())
+            faustN.faustNode.setParamValue("/untitled/sc2", stepsSnare[1].getTog())
+            faustN.faustNode.setParamValue("/untitled/sc3", stepsSnare[2].getTog())
+            faustN.faustNode.setParamValue("/untitled/sc4", stepsSnare[3].getTog())
+            faustN.faustNode.setParamValue("/untitled/sc5", stepsSnare[4].getTog())
+            faustN.faustNode.setParamValue("/untitled/sc6", stepsSnare[5].getTog())
+            faustN.faustNode.setParamValue("/untitled/sc7", stepsSnare[6].getTog())
+            faustN.faustNode.setParamValue("/untitled/sc8", stepsSnare[7].getTog())
+            faustN.faustNode.setParamValue("/untitled/s1", stepsBass[0].getSlideA(0,12,1))
+            faustN.faustNode.setParamValue("/untitled/s2", stepsBass[1].getSlideA(0,12,1))
+            faustN.faustNode.setParamValue("/untitled/s3", stepsBass[2].getSlideA(0,12,1))
+            faustN.faustNode.setParamValue("/untitled/s4", stepsBass[3].getSlideA(0,12,1))
+            faustN.faustNode.setParamValue("/untitled/s5", stepsBass[4].getSlideA(0,12,1))
+            faustN.faustNode.setParamValue("/untitled/s6", stepsBass[5].getSlideA(0,12,1))
+            faustN.faustNode.setParamValue("/untitled/s7", stepsBass[6].getSlideA(0,12,1))
+            faustN.faustNode.setParamValue("/untitled/s8", stepsBass[7].getSlideA(0,12,1))
 
-
-
-
-            let flv = filter.getValue(30,2000,0);
-            d4.filty(flv, 1);
+            }
 
         }
         function windowResized() {
-            resizeCanvas(width, height);
+            resizeCanvas(widthv, height);
         }
 
-        function playSequence() {
-            click = s.getValue(50, 4, 0);
+        // Set to > 0 if the DSP is polyphonic
+        const FAUST_DSP_VOICES = 0;
 
-            if (clock > click) {
-                clock = 0;
+        (async () => {
 
-
-                currentStep = (currentStep + 1) % 8;
-
-                if (stepsKick[currentStep].getTog() == true) {
-                    d1.trig();
+            // Create audio context activation button
+            /** @type {HTMLButtonElement} */
+            const $buttonDsp = document.getElementById("button-dsp");
+            const { createFaustNode } = await import("./create-node.js");
+            const play = (node) => {
+                node.keyOn(0, 60, 100);
+                setTimeout(() => node.keyOn(0, 64, 100), 1000);
+                setTimeout(() => node.keyOn(0, 67, 100), 2000);
+                setTimeout(() => node.allNotesOff(), 5000);
+                setTimeout(() => play(node), 7000);
+            }
+            // Function to activate audio context
+            $buttonDsp.disabled = true;
+            $buttonDsp.onclick = async () => {
+                if (audioContext.state === "running") {
+                    $buttonDsp.textContent = "Suspended";
+                    await audioContext.suspend();
+                } else if (audioContext.state === "suspended") {
+                    $buttonDsp.textContent = "Running";
+                    await audioContext.resume();
+                    if (FAUST_DSP_VOICES) play(faustNode);
                 }
-
-                if (stepsBass[currentStep].getTog() == true) {
-                    d4.trig();
-                    let randa = random(60, 300);
-                    let randb = random(0.0, 1);
-
-                    d4.pitchy(randa, randb);
-
-                }
-                if (stepsSnare[currentStep].getTog() == true) {
-                    d2.trig();
-                }
-                if (stepsHat[currentStep].getTog() == true) {
-                    d3.trig();
-                }
-
-
-
             }
 
-            push();
-            text("bpm:" + floor(((60 / click) * 1000) / 64), (width/ 8)*7, 20);
-   
-            pop();
-            if (b1.value) {
-                clock = clock + 1;
-                userStartAudio();
+            // Create Faust node
+            faustN = await createFaustNode(audioContext, "untitled", FAUST_DSP_VOICES);
+            faustNode = faustN.faustNode;
 
+            if (!faustNode) throw new Error("Faust DSP not compiled");
 
-            } else {
-                flag = false;
-                clock = 0;
-                currentStep = 0;
+            // Connect the Faust node to the audio output
+            faustNode.connect(audioContext.destination);
+
+            // Connect the Faust node to the audio input
+            if (faustNode.getNumInputs() > 0) {
+                const { connectToAudioInput } = await import("./create-node.js");
+                await connectToAudioInput(audioContext, null, faustNode, null);
             }
 
-            if (currentStep == 7 && clock >= click) {
-                flag = true;
+            // Create Faust node activation button
+            $buttonDsp.disabled = false;
+
+            // Set page title to the DSP name
+            document.title = name;
+            console.log(faustNode);
+            const c1 = document.querySelector("#c1ui");
 
 
-            }
-            else { flag = false; }
+            
+
+        })();
 
 
 
-            if (flag == true) {
-                flag = false;
 
-
-            }
-
-        }
 
 
 
 
     </script>
-
 </body>
 
 </html>

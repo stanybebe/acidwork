@@ -1,18 +1,24 @@
 {
-    "name": "untitled",
-    "filename": "untitled.dsp",
-    "version": "2.78.0",
+    "name": "acidworkv3_1_2",
+    "filename": "acidworkv3_1_2.dsp",
+    "version": "2.78.3",
     "compile_options": "-lang wasm-i -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -single -ftz 2",
     "library_list": [
+        "/usr/share/faust/soundfiles.lib",
         "/usr/share/faust/stdfaust.lib",
+        "/usr/share/faust/aanl.lib",
         "/usr/share/faust/oscillators.lib",
         "/usr/share/faust/basics.lib",
         "/usr/share/faust/maths.lib",
         "/usr/share/faust/platform.lib",
+        "/usr/share/faust/signals.lib",
         "/usr/share/faust/envelopes.lib",
         "/usr/share/faust/filters.lib",
-        "/usr/share/faust/signals.lib",
-        "/usr/share/faust/noises.lib"
+        "/usr/share/faust/noises.lib",
+        "/usr/share/faust/interpolators.lib",
+        "/usr/share/faust/routes.lib",
+        "/usr/share/faust/misceffects.lib",
+        "/usr/share/faust/delays.lib"
     ],
     "include_pathnames": [
         "/share/faust",
@@ -20,11 +26,35 @@
         "/usr/share/faust",
         "."
     ],
-    "size": 262596,
-    "code": "kCGZAaQpHw==",
+    "size": 8651632,
+    "code": "QDJeFSQPHw==",
     "inputs": 0,
     "outputs": 2,
     "meta": [
+        {
+            "aanl.lib/ADAA1:author": "Dario Sanfilippo"
+        },
+        {
+            "aanl.lib/ADAA1:copyright": "Copyright (C) 2021 Dario Sanfilippo     <sanfilippo.dario@gmail.com>"
+        },
+        {
+            "aanl.lib/ADAA1:license": "LGPL v3.0 license"
+        },
+        {
+            "aanl.lib/name": "Faust Antialiased Nonlinearities"
+        },
+        {
+            "aanl.lib/tanh1:author": "Dario Sanfilippo"
+        },
+        {
+            "aanl.lib/tanh1:copyright": "Copyright (C) 2021 Dario Sanfilippo     <sanfilippo.dario@gmail.com>"
+        },
+        {
+            "aanl.lib/tanh1:license": "LGPL v3.0 license"
+        },
+        {
+            "aanl.lib/version": "1.4.0"
+        },
         {
             "basics.lib/counter:author": "Stephane Letz"
         },
@@ -32,13 +62,16 @@
             "basics.lib/name": "Faust Basic Element Library"
         },
         {
-            "basics.lib/tabulateNd": "Copyright (C) 2023 Bart Brouns <bart@magnetophon.nl>"
-        },
-        {
             "basics.lib/version": "1.21.0"
         },
         {
             "compile_options": "-lang wasm-i -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -single -ftz 2"
+        },
+        {
+            "delays.lib/name": "Faust Delay Library"
+        },
+        {
+            "delays.lib/version": "1.1.0"
         },
         {
             "envelopes.lib/adsr:author": "Yann Orlarey and Andrey Bundin"
@@ -62,7 +95,7 @@
             "envelopes.lib/version": "1.3.0"
         },
         {
-            "filename": "untitled.dsp"
+            "filename": "acidworkv3_1_2.dsp"
         },
         {
             "filters.lib/fir:author": "Julius O. Smith III"
@@ -72,6 +105,12 @@
         },
         {
             "filters.lib/fir:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/highpass:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/highpass:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
         },
         {
             "filters.lib/iir:author": "Julius O. Smith III"
@@ -86,7 +125,28 @@
             "filters.lib/lowpass0_highpass1": "MIT-style STK-4.3 license"
         },
         {
+            "filters.lib/lowpass0_highpass1:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/lowpass:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/lowpass:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/lowpass:license": "MIT-style STK-4.3 license"
+        },
+        {
             "filters.lib/name": "Faust Filters Library"
+        },
+        {
+            "filters.lib/nlf2:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/nlf2:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/nlf2:license": "MIT-style STK-4.3 license"
         },
         {
             "filters.lib/resonhp:author": "Julius O. Smith III"
@@ -105,6 +165,24 @@
         },
         {
             "filters.lib/resonlp:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/tf1:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/tf1:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/tf1:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/tf1s:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/tf1s:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/tf1s:license": "MIT-style STK-4.3 license"
         },
         {
             "filters.lib/tf2:author": "Julius O. Smith III"
@@ -128,6 +206,66 @@
             "filters.lib/version": "1.6.0"
         },
         {
+            "interpolators.lib/interpolate_cosine:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolate_cosine:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolate_cubic:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolate_cubic:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolate_linear:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolate_linear:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_cosine:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_cosine:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_cubic:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_cubic:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_four_points:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_four_points:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_linear:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_linear:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_select:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_select:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_two_points:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_two_points:licence": "MIT"
+        },
+        {
+            "interpolators.lib/name": "Faust Interpolator Library"
+        },
+        {
+            "interpolators.lib/version": "1.4.0"
+        },
+        {
             "maths.lib/author": "GRAME"
         },
         {
@@ -143,7 +281,16 @@
             "maths.lib/version": "2.8.1"
         },
         {
-            "name": "untitled"
+            "misceffects.lib/echo:author": "Romain Michon"
+        },
+        {
+            "misceffects.lib/name": "Misc Effects Library"
+        },
+        {
+            "misceffects.lib/version": "2.5.0"
+        },
+        {
+            "name": "acidworkv3_1_2"
         },
         {
             "noises.lib/name": "Faust Noise Generator Library"
@@ -170,88 +317,166 @@
             "platform.lib/version": "1.3.0"
         },
         {
+            "routes.lib/name": "Faust Signal Routing Library"
+        },
+        {
+            "routes.lib/version": "1.2.0"
+        },
+        {
             "signals.lib/name": "Faust Signal Routing Library"
         },
         {
             "signals.lib/version": "1.6.0"
+        },
+        {
+            "soundfiles.lib/name": "Faust Soundfile Library"
+        },
+        {
+            "soundfiles.lib/version": "1.7.0"
         }
     ],
     "ui": [
         {
             "type": "vgroup",
-            "label": "untitled",
+            "label": "acidworkv3_1_2",
             "items": [
+                {
+                    "type": "soundfile",
+                    "label": "0x00",
+                    "varname": "fSoundfile0",
+                    "url": "{-https://raw.githubusercontent.com/stanybebe/stanybebe.github.io/master/A04.mp3-;-https://raw.githubusercontent.com/stanybebe/stanybebe.github.io/master/A05.mp3-;-https://raw.githubusercontent.com/stanybebe/stanybebe.github.io/master/A06.mp3-;-https://raw.githubusercontent.com/stanybebe/stanybebe.github.io/master/A07.mp3-;-https://raw.githubusercontent.com/stanybebe/stanybebe.github.io/master/A08.mp3-}",
+                    "address": "/acidworkv3_1_2/0x00",
+                    "index": 262144
+                },
+                {
+                    "type": "hslider",
+                    "label": "amen",
+                    "varname": "fHslider22",
+                    "shortname": "amen",
+                    "address": "/acidworkv3_1_2/amen",
+                    "index": 8651596,
+                    "init": 0,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.001
+                },
+                {
+                    "type": "hslider",
+                    "label": "amenGain",
+                    "varname": "fHslider20",
+                    "shortname": "amenGain",
+                    "address": "/acidworkv3_1_2/amenGain",
+                    "index": 8651392,
+                    "init": 0.5,
+                    "min": 0,
+                    "max": 0.5,
+                    "step": 0.01
+                },
+                {
+                    "type": "vbargraph",
+                    "label": "astep",
+                    "varname": "fVbargraph3",
+                    "shortname": "astep",
+                    "address": "/acidworkv3_1_2/astep",
+                    "index": 8651492,
+                    "min": 0,
+                    "max": 7
+                },
+                {
+                    "type": "hslider",
+                    "label": "astl",
+                    "varname": "fHslider21",
+                    "shortname": "astl",
+                    "address": "/acidworkv3_1_2/astl",
+                    "index": 8651488,
+                    "init": 8,
+                    "min": 1,
+                    "max": 8,
+                    "step": 1
+                },
                 {
                     "type": "checkbox",
                     "label": "c1",
                     "varname": "fCheckbox0",
                     "shortname": "c1",
-                    "address": "/untitled/c1",
-                    "index": 262252
+                    "address": "/acidworkv3_1_2/c1",
+                    "index": 262300
                 },
                 {
                     "type": "checkbox",
                     "label": "c2",
                     "varname": "fCheckbox1",
                     "shortname": "c2",
-                    "address": "/untitled/c2",
-                    "index": 262256
+                    "address": "/acidworkv3_1_2/c2",
+                    "index": 262304
                 },
                 {
                     "type": "checkbox",
                     "label": "c3",
                     "varname": "fCheckbox2",
                     "shortname": "c3",
-                    "address": "/untitled/c3",
-                    "index": 262260
+                    "address": "/acidworkv3_1_2/c3",
+                    "index": 262308
                 },
                 {
                     "type": "checkbox",
                     "label": "c4",
                     "varname": "fCheckbox3",
                     "shortname": "c4",
-                    "address": "/untitled/c4",
-                    "index": 262264
+                    "address": "/acidworkv3_1_2/c4",
+                    "index": 262312
                 },
                 {
                     "type": "checkbox",
                     "label": "c5",
                     "varname": "fCheckbox4",
                     "shortname": "c5",
-                    "address": "/untitled/c5",
-                    "index": 262268
+                    "address": "/acidworkv3_1_2/c5",
+                    "index": 262316
                 },
                 {
                     "type": "checkbox",
                     "label": "c6",
                     "varname": "fCheckbox5",
                     "shortname": "c6",
-                    "address": "/untitled/c6",
-                    "index": 262272
+                    "address": "/acidworkv3_1_2/c6",
+                    "index": 262320
                 },
                 {
                     "type": "checkbox",
                     "label": "c7",
                     "varname": "fCheckbox6",
                     "shortname": "c7",
-                    "address": "/untitled/c7",
-                    "index": 262276
+                    "address": "/acidworkv3_1_2/c7",
+                    "index": 262324
                 },
                 {
                     "type": "checkbox",
                     "label": "c8",
                     "varname": "fCheckbox7",
                     "shortname": "c8",
-                    "address": "/untitled/c8",
-                    "index": 262280
+                    "address": "/acidworkv3_1_2/c8",
+                    "index": 262328
+                },
+                {
+                    "type": "hslider",
+                    "label": "dist",
+                    "varname": "fHslider14",
+                    "shortname": "dist",
+                    "address": "/acidworkv3_1_2/dist",
+                    "index": 8651124,
+                    "init": 1,
+                    "min": 1,
+                    "max": 8,
+                    "step": 0.01
                 },
                 {
                     "type": "hslider",
                     "label": "filt",
-                    "varname": "fHslider11",
+                    "varname": "fHslider12",
                     "shortname": "filt",
-                    "address": "/untitled/filt",
-                    "index": 262320,
+                    "address": "/acidworkv3_1_2/filt",
+                    "index": 262364,
                     "init": 200,
                     "min": 30,
                     "max": 1000,
@@ -262,72 +487,94 @@
                     "label": "kc1",
                     "varname": "fCheckbox8",
                     "shortname": "kc1",
-                    "address": "/untitled/kc1",
-                    "index": 262356
+                    "address": "/acidworkv3_1_2/kc1",
+                    "index": 8651172
                 },
                 {
                     "type": "checkbox",
                     "label": "kc2",
                     "varname": "fCheckbox9",
                     "shortname": "kc2",
-                    "address": "/untitled/kc2",
-                    "index": 262360
+                    "address": "/acidworkv3_1_2/kc2",
+                    "index": 8651176
                 },
                 {
                     "type": "checkbox",
                     "label": "kc3",
                     "varname": "fCheckbox10",
                     "shortname": "kc3",
-                    "address": "/untitled/kc3",
-                    "index": 262364
+                    "address": "/acidworkv3_1_2/kc3",
+                    "index": 8651180
                 },
                 {
                     "type": "checkbox",
                     "label": "kc4",
                     "varname": "fCheckbox11",
                     "shortname": "kc4",
-                    "address": "/untitled/kc4",
-                    "index": 262368
+                    "address": "/acidworkv3_1_2/kc4",
+                    "index": 8651184
                 },
                 {
                     "type": "checkbox",
                     "label": "kc5",
                     "varname": "fCheckbox12",
                     "shortname": "kc5",
-                    "address": "/untitled/kc5",
-                    "index": 262372
+                    "address": "/acidworkv3_1_2/kc5",
+                    "index": 8651188
                 },
                 {
                     "type": "checkbox",
                     "label": "kc6",
                     "varname": "fCheckbox13",
                     "shortname": "kc6",
-                    "address": "/untitled/kc6",
-                    "index": 262376
+                    "address": "/acidworkv3_1_2/kc6",
+                    "index": 8651192
                 },
                 {
                     "type": "checkbox",
                     "label": "kc7",
                     "varname": "fCheckbox14",
                     "shortname": "kc7",
-                    "address": "/untitled/kc7",
-                    "index": 262380
+                    "address": "/acidworkv3_1_2/kc7",
+                    "index": 8651196
                 },
                 {
                     "type": "checkbox",
                     "label": "kc8",
                     "varname": "fCheckbox15",
                     "shortname": "kc8",
-                    "address": "/untitled/kc8",
-                    "index": 262384
+                    "address": "/acidworkv3_1_2/kc8",
+                    "index": 8651200
+                },
+                {
+                    "type": "hslider",
+                    "label": "kickGain",
+                    "varname": "fHslider16",
+                    "shortname": "kickGain",
+                    "address": "/acidworkv3_1_2/kickGain",
+                    "index": 8651140,
+                    "init": 0.5,
+                    "min": 0,
+                    "max": 0.5,
+                    "step": 0.01
+                },
+                {
+                    "type": "vbargraph",
+                    "label": "kstep",
+                    "varname": "fVbargraph1",
+                    "shortname": "kstep",
+                    "address": "/acidworkv3_1_2/kstep",
+                    "index": 8651168,
+                    "min": 0,
+                    "max": 7
                 },
                 {
                     "type": "hslider",
                     "label": "kstl",
-                    "varname": "fHslider12",
+                    "varname": "fHslider17",
                     "shortname": "kstl",
-                    "address": "/untitled/kstl",
-                    "index": 262352,
+                    "address": "/acidworkv3_1_2/kstl",
+                    "index": 8651164,
                     "init": 8,
                     "min": 1,
                     "max": 8,
@@ -336,10 +583,10 @@
                 {
                     "type": "hslider",
                     "label": "s1",
-                    "varname": "fHslider3",
+                    "varname": "fHslider4",
                     "shortname": "s1",
-                    "address": "/untitled/s1",
-                    "index": 262204,
+                    "address": "/acidworkv3_1_2/s1",
+                    "index": 262244,
                     "init": 0,
                     "min": 0,
                     "max": 12,
@@ -348,10 +595,10 @@
                 {
                     "type": "hslider",
                     "label": "s2",
-                    "varname": "fHslider4",
+                    "varname": "fHslider5",
                     "shortname": "s2",
-                    "address": "/untitled/s2",
-                    "index": 262208,
+                    "address": "/acidworkv3_1_2/s2",
+                    "index": 262248,
                     "init": 0,
                     "min": 0,
                     "max": 12,
@@ -360,10 +607,10 @@
                 {
                     "type": "hslider",
                     "label": "s3",
-                    "varname": "fHslider5",
+                    "varname": "fHslider6",
                     "shortname": "s3",
-                    "address": "/untitled/s3",
-                    "index": 262212,
+                    "address": "/acidworkv3_1_2/s3",
+                    "index": 262252,
                     "init": 0,
                     "min": 0,
                     "max": 12,
@@ -372,10 +619,10 @@
                 {
                     "type": "hslider",
                     "label": "s4",
-                    "varname": "fHslider6",
+                    "varname": "fHslider7",
                     "shortname": "s4",
-                    "address": "/untitled/s4",
-                    "index": 262216,
+                    "address": "/acidworkv3_1_2/s4",
+                    "index": 262256,
                     "init": 0,
                     "min": 0,
                     "max": 12,
@@ -384,10 +631,10 @@
                 {
                     "type": "hslider",
                     "label": "s5",
-                    "varname": "fHslider7",
+                    "varname": "fHslider8",
                     "shortname": "s5",
-                    "address": "/untitled/s5",
-                    "index": 262220,
+                    "address": "/acidworkv3_1_2/s5",
+                    "index": 262260,
                     "init": 0,
                     "min": 0,
                     "max": 12,
@@ -396,10 +643,10 @@
                 {
                     "type": "hslider",
                     "label": "s6",
-                    "varname": "fHslider8",
+                    "varname": "fHslider9",
                     "shortname": "s6",
-                    "address": "/untitled/s6",
-                    "index": 262224,
+                    "address": "/acidworkv3_1_2/s6",
+                    "index": 262264,
                     "init": 0,
                     "min": 0,
                     "max": 12,
@@ -408,10 +655,10 @@
                 {
                     "type": "hslider",
                     "label": "s7",
-                    "varname": "fHslider9",
+                    "varname": "fHslider10",
                     "shortname": "s7",
-                    "address": "/untitled/s7",
-                    "index": 262228,
+                    "address": "/acidworkv3_1_2/s7",
+                    "index": 262268,
                     "init": 0,
                     "min": 0,
                     "max": 12,
@@ -420,10 +667,10 @@
                 {
                     "type": "hslider",
                     "label": "s8",
-                    "varname": "fHslider10",
+                    "varname": "fHslider11",
                     "shortname": "s8",
-                    "address": "/untitled/s8",
-                    "index": 262232,
+                    "address": "/acidworkv3_1_2/s8",
+                    "index": 262272,
                     "init": 0,
                     "min": 0,
                     "max": 12,
@@ -434,84 +681,192 @@
                     "label": "sc1",
                     "varname": "fCheckbox16",
                     "shortname": "sc1",
-                    "address": "/untitled/sc1",
-                    "index": 262464
+                    "address": "/acidworkv3_1_2/sc1",
+                    "index": 8651252
                 },
                 {
                     "type": "checkbox",
                     "label": "sc2",
                     "varname": "fCheckbox17",
                     "shortname": "sc2",
-                    "address": "/untitled/sc2",
-                    "index": 262468
+                    "address": "/acidworkv3_1_2/sc2",
+                    "index": 8651256
                 },
                 {
                     "type": "checkbox",
                     "label": "sc3",
                     "varname": "fCheckbox18",
                     "shortname": "sc3",
-                    "address": "/untitled/sc3",
-                    "index": 262472
+                    "address": "/acidworkv3_1_2/sc3",
+                    "index": 8651260
                 },
                 {
                     "type": "checkbox",
                     "label": "sc4",
                     "varname": "fCheckbox19",
                     "shortname": "sc4",
-                    "address": "/untitled/sc4",
-                    "index": 262476
+                    "address": "/acidworkv3_1_2/sc4",
+                    "index": 8651264
                 },
                 {
                     "type": "checkbox",
                     "label": "sc5",
                     "varname": "fCheckbox20",
                     "shortname": "sc5",
-                    "address": "/untitled/sc5",
-                    "index": 262480
+                    "address": "/acidworkv3_1_2/sc5",
+                    "index": 8651268
                 },
                 {
                     "type": "checkbox",
                     "label": "sc6",
                     "varname": "fCheckbox21",
                     "shortname": "sc6",
-                    "address": "/untitled/sc6",
-                    "index": 262484
+                    "address": "/acidworkv3_1_2/sc6",
+                    "index": 8651272
                 },
                 {
                     "type": "checkbox",
                     "label": "sc7",
                     "varname": "fCheckbox22",
                     "shortname": "sc7",
-                    "address": "/untitled/sc7",
-                    "index": 262488
+                    "address": "/acidworkv3_1_2/sc7",
+                    "index": 8651276
                 },
                 {
                     "type": "checkbox",
                     "label": "sc8",
                     "varname": "fCheckbox23",
                     "shortname": "sc8",
-                    "address": "/untitled/sc8",
-                    "index": 262492
+                    "address": "/acidworkv3_1_2/sc8",
+                    "index": 8651280
+                },
+                {
+                    "type": "hslider",
+                    "label": "smootha",
+                    "varname": "fHslider1",
+                    "shortname": "smootha",
+                    "address": "/acidworkv3_1_2/smootha",
+                    "index": 262200,
+                    "init": 0,
+                    "min": 0,
+                    "max": 0.02,
+                    "step": 0.0001
+                },
+                {
+                    "type": "hslider",
+                    "label": "snareGain",
+                    "varname": "fHslider18",
+                    "shortname": "snareGain",
+                    "address": "/acidworkv3_1_2/snareGain",
+                    "index": 8651232,
+                    "init": 0.5,
+                    "min": 0,
+                    "max": 0.5,
+                    "step": 0.01
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp1",
+                    "varname": "fCheckbox24",
+                    "shortname": "sp1",
+                    "address": "/acidworkv3_1_2/sp1",
+                    "index": 8651496
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp2",
+                    "varname": "fCheckbox25",
+                    "shortname": "sp2",
+                    "address": "/acidworkv3_1_2/sp2",
+                    "index": 8651500
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp3",
+                    "varname": "fCheckbox26",
+                    "shortname": "sp3",
+                    "address": "/acidworkv3_1_2/sp3",
+                    "index": 8651504
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp4",
+                    "varname": "fCheckbox27",
+                    "shortname": "sp4",
+                    "address": "/acidworkv3_1_2/sp4",
+                    "index": 8651508
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp5",
+                    "varname": "fCheckbox28",
+                    "shortname": "sp5",
+                    "address": "/acidworkv3_1_2/sp5",
+                    "index": 8651512
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp6",
+                    "varname": "fCheckbox29",
+                    "shortname": "sp6",
+                    "address": "/acidworkv3_1_2/sp6",
+                    "index": 8651516
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp7",
+                    "varname": "fCheckbox30",
+                    "shortname": "sp7",
+                    "address": "/acidworkv3_1_2/sp7",
+                    "index": 8651520
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp8",
+                    "varname": "fCheckbox31",
+                    "shortname": "sp8",
+                    "address": "/acidworkv3_1_2/sp8",
+                    "index": 8651524
+                },
+                {
+                    "type": "vbargraph",
+                    "label": "sstep",
+                    "varname": "fVbargraph2",
+                    "shortname": "sstep",
+                    "address": "/acidworkv3_1_2/sstep",
+                    "index": 8651248,
+                    "min": 0,
+                    "max": 7
                 },
                 {
                     "type": "hslider",
                     "label": "sstl",
-                    "varname": "fHslider13",
+                    "varname": "fHslider19",
                     "shortname": "sstl",
-                    "address": "/untitled/sstl",
-                    "index": 262460,
+                    "address": "/acidworkv3_1_2/sstl",
+                    "index": 8651244,
                     "init": 8,
                     "min": 1,
                     "max": 8,
                     "step": 1
+                },
+                {
+                    "type": "vbargraph",
+                    "label": "step",
+                    "varname": "fVbargraph0",
+                    "shortname": "step",
+                    "address": "/acidworkv3_1_2/step",
+                    "index": 262240,
+                    "min": 0,
+                    "max": 7
                 },
                 {
                     "type": "hslider",
                     "label": "stl",
-                    "varname": "fHslider2",
+                    "varname": "fHslider3",
                     "shortname": "stl",
-                    "address": "/untitled/stl",
-                    "index": 262200,
+                    "address": "/acidworkv3_1_2/stl",
+                    "index": 262236,
                     "init": 8,
                     "min": 1,
                     "max": 8,
@@ -519,11 +874,23 @@
                 },
                 {
                     "type": "hslider",
+                    "label": "synthGain",
+                    "varname": "fHslider15",
+                    "shortname": "synthGain",
+                    "address": "/acidworkv3_1_2/synthGain",
+                    "index": 8651128,
+                    "init": 0.5,
+                    "min": 0,
+                    "max": 0.5,
+                    "step": 0.01
+                },
+                {
+                    "type": "hslider",
                     "label": "temp",
-                    "varname": "fHslider1",
+                    "varname": "fHslider0",
                     "shortname": "temp",
-                    "address": "/untitled/temp",
-                    "index": 262172,
+                    "address": "/acidworkv3_1_2/temp",
+                    "index": 262168,
                     "init": 120,
                     "min": 20,
                     "max": 200,
@@ -532,14 +899,26 @@
                 {
                     "type": "hslider",
                     "label": "tran",
-                    "varname": "fHslider0",
+                    "varname": "fHslider2",
                     "shortname": "tran",
-                    "address": "/untitled/tran",
-                    "index": 262164,
+                    "address": "/acidworkv3_1_2/tran",
+                    "index": 262204,
                     "init": 60,
                     "min": 24,
                     "max": 110,
                     "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "wet",
+                    "varname": "fHslider13",
+                    "shortname": "wet",
+                    "address": "/acidworkv3_1_2/wet",
+                    "index": 8651112,
+                    "init": 0.3,
+                    "min": 0,
+                    "max": 0.3,
+                    "step": 0.01
                 }
             ]
         }

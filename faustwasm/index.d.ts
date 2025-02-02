@@ -230,6 +230,49 @@ interface AudioData$1 {
  * @param wasmFile path to `libfaust-wasm.wasm`
  */
 export declare const instantiateFaustModuleFromFile: (jsFile: string, dataFile?: string, wasmFile?: string) => Promise<FaustModule>;
+declare class FaustAudioWorkletCommunicator {
+	protected readonly port: MessagePort;
+	protected readonly supportSharedArrayBuffer: boolean;
+	protected readonly byteLength: number;
+	protected uin8Invert: Uint8ClampedArray;
+	protected uin8NewAccData: Uint8ClampedArray;
+	protected uin8NewGyrData: Uint8ClampedArray;
+	protected f32Acc: Float32Array;
+	protected f32Gyr: Float32Array;
+	constructor(port: MessagePort);
+	initializeBuffer(ab: SharedArrayBuffer | ArrayBuffer): void;
+	setNewAccDataAvailable(value: boolean): void;
+	getNewAccDataAvailable(): boolean;
+	setNewGyrDataAvailable(value: boolean): void;
+	getNewGyrDataAvailable(): boolean;
+	setAcc({ x, y, z }: {
+		x: number;
+		y: number;
+		z: number;
+	}, invert?: boolean): void;
+	getAcc(): {
+		x: number;
+		y: number;
+		z: number;
+		invert: boolean;
+	} | undefined;
+	setGyr({ alpha, beta, gamma }: {
+		alpha: number;
+		beta: number;
+		gamma: number;
+	}): void;
+	getGyr(): {
+		alpha: number;
+		beta: number;
+		gamma: number;
+	} | undefined;
+}
+declare class FaustAudioWorkletNodeCommunicator extends FaustAudioWorkletCommunicator {
+	constructor(port: MessagePort);
+}
+declare class FaustAudioWorkletProcessorCommunicator extends FaustAudioWorkletCommunicator {
+	constructor(port: MessagePort);
+}
 /**
  * The Faust wasm instance interface.
  */
@@ -621,6 +664,29 @@ export interface IFaustBaseWebAudioDsp {
 	 */
 	getJSON(): string;
 	/**
+	* Start accelerometer and gyroscope handlers.
+	*/
+	startSensors(): void;
+	/**
+	 * Stop accelerometer and gyroscope handlers.
+	 */
+	stopSensors(): void;
+	/** Indicating if the DSP handles the accelerometer */
+	readonly hasAccInput: boolean;
+	/**
+	 * Accelerometer handling.
+	 * accelerationIncludingGravity: DeviceMotionEvent["accelerationIncludingGravity"]
+	 * invert: boolean
+	 */
+	propagateAcc(accelerationIncludingGravity: NonNullable<DeviceMotionEvent["accelerationIncludingGravity"]>, invert: boolean): void;
+	/** Indicating if the DSP handles the gyroscope */
+	readonly hasGyrInput: boolean;
+	/**
+	 * Gyroscope handling.
+	 * event: Pick<DeviceOrientationEvent, "alpha" | "beta" | "gamma">
+	 */
+	propagateGyr(event: Pick<DeviceOrientationEvent, "alpha" | "beta" | "gamma">): void;
+	/**
 	 * Start the DSP audio processing.
 	 */
 	start(): void;
@@ -632,14 +698,6 @@ export interface IFaustBaseWebAudioDsp {
 	 * Destroy the DSP.
 	 */
 	destroy(): void;
-	/** Indicating if the DSP handles the accelerometer */
-	readonly hasAccInput: boolean;
-	/** Accelerometer handling */
-	propagateAcc(accelerationIncludingGravity: NonNullable<DeviceMotionEvent["accelerationIncludingGravity"]>, invert: boolean): void;
-	/** Indicating if the DSP handles the gyroscope */
-	readonly hasGyrInput: boolean;
-	/** Gyroscope handling */
-	propagateGyr(event: Pick<DeviceOrientationEvent, "alpha" | "beta" | "gamma">): void;
 }
 export interface IFaustMonoWebAudioDsp extends IFaustBaseWebAudioDsp {
 }
@@ -777,6 +835,8 @@ export declare class FaustBaseWebAudioDsp implements IFaustBaseWebAudioDsp {
 	getUI(): FaustUIDescriptor;
 	getDescriptors(): FaustUIInputItem[];
 	hasSoundfiles(): boolean;
+	startSensors(): void;
+	stopSensors(): void;
 	start(): void;
 	stop(): void;
 	destroy(): void;
@@ -876,6 +936,7 @@ export interface FaustAudioWorkletProcessorDependencies<Poly extends boolean = f
 	FaustPolyWebAudioDsp: Poly extends true ? typeof FaustPolyWebAudioDsp : undefined;
 	FaustWebAudioDspVoice: Poly extends true ? typeof FaustWebAudioDspVoice : undefined;
 	FaustWasmInstantiator: typeof FaustWasmInstantiator;
+	FaustAudioWorkletProcessorCommunicator: typeof FaustAudioWorkletProcessorCommunicator;
 }
 export interface FaustAudioWorkletNodeOptions<Poly extends boolean = false> extends AudioWorkletNodeOptions {
 	processorOptions: Poly extends true ? FaustPolyAudioWorkletProcessorOptions : FaustMonoAudioWorkletProcessorOptions;
@@ -926,6 +987,7 @@ export interface FaustFFTAudioWorkletProcessorDependencies {
 	FaustBaseWebAudioDsp: typeof FaustBaseWebAudioDsp;
 	FaustMonoWebAudioDsp: typeof FaustMonoWebAudioDsp;
 	FaustWasmInstantiator: typeof FaustWasmInstantiator;
+	FaustAudioWorkletProcessorCommunicator: typeof FaustAudioWorkletProcessorCommunicator;
 	FFTUtils: typeof FFTUtils;
 }
 export interface FaustFFTAudioWorkletNodeOptions extends AudioWorkletNodeOptions {
@@ -1132,6 +1194,8 @@ export declare class FaustOfflineProcessor<Poly extends boolean = false> {
 	propagateAcc(accelerationIncludingGravity: NonNullable<DeviceMotionEvent["accelerationIncludingGravity"]>, invert?: boolean): void;
 	get hasGyrInput(): boolean;
 	propagateGyr(event: Pick<DeviceOrientationEvent, "alpha" | "beta" | "gamma">): void;
+	startSensors(): void;
+	stopSensors(): void;
 	/**
 	 * Render frames in an array.
 	 *
@@ -1288,7 +1352,9 @@ export declare class FaustAudioWorkletNode<Poly extends boolean = false> extends
 	protected fPlotHandler: PlotHandler | null;
 	protected fUICallback: UIHandler;
 	protected fDescriptor: FaustUIInputItem[];
+	protected fCommunicator: FaustAudioWorkletNodeCommunicator;
 	constructor(context: BaseAudioContext, name: string, factory: LooseFaustDspFactory, options?: Partial<FaustAudioWorkletNodeOptions<Poly>>);
+	protected handleMessageAux: (e: MessageEvent) => void;
 	private handleDeviceMotion;
 	private handleDeviceOrientation;
 	/** Setup accelerometer and gyroscope handlers */
@@ -1358,8 +1424,9 @@ export declare class FaustScriptProcessorNode<Poly extends boolean = false> exte
 	protected handleDeviceMotion: any;
 	protected handleDeviceOrientation: any;
 	init(instance: Poly extends true ? FaustPolyWebAudioDsp : FaustMonoWebAudioDsp): void;
-	/** Setup accelerometer and gyroscope handlers */
+	/** Start accelerometer and gyroscope handlers */
 	startSensors(): Promise<void>;
+	/** Stop accelerometer and gyroscope handlers */
 	stopSensors(): void;
 	compute(input: Float32Array[], output: Float32Array[]): boolean;
 	setOutputParamHandler(handler: OutputParamHandler): void;

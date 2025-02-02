@@ -9,7 +9,7 @@ class slidey {
     this.omax = 0;
     this.omin = 0;
     this.s = 0;
-    this.c1 = 10;
+    this.c1 = 2;
     this.xpos = x_pos;
     this.ypos = y_pos;
     this.width = w;
@@ -52,7 +52,7 @@ class slidey {
           );
           let valmap = map(clampX, this.xpos, this.xpos + this.width, 0, 1);
           this.value = valmap;
-          this.c1 = 10;
+          this.c1 = 2;
         }
       }
     }

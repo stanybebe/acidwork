@@ -1,528 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>ACIDWERK</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.2/p5.min.js"></script>
-    <script src="/components.js"></script>
-  </head>
 
-  <body>
-    <main>
-      <span id="dsp-switch">
-        <center><button id="button-dsp">Start</button></center>
+<head>
+  <title>ACIDWERK</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.2/p5.min.js"></script>
+  <script src="./acidworkassets/components.js"></script>
+</head>
 
-        <center>
-          <div id="myCanvas" style="width: 100% !important"></div>
-        </center>
-      </span>
-    </main>
+<body>
+  <main>
+    <span id="dsp-switch">
+      <center><button id="button-dsp">Start</button></center>
 
-    <script>
-      // Create audio context
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      const audioContext = new AudioCtx({ latencyHint: 0.00001 });
-      audioContext.suspend();
+      <center>
+        <div id="myCanvas" style="width: 100% !important"></div>
+      </center>
+    </span>
+  </main>
+
+  <script>
+    // Create audio context
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const audioContext = new AudioCtx({ latencyHint: 0.00001 });
+    audioContext.suspend();
+    // Set:
+
+    let amen;
+    let amenGain;
+    let synthGain;
+    let kickGain;
+    let snareGain;
+
+    let sstl;
+    let stl;
+    let astl;
+    let smootha;
+    let kstl;
+    let Dist;
+
+    // Get:
+
+    let gstep;
+    let gsstep;
+    let gkstep;
+    let gastep;
+
+    let st;
+    let gui;
+    let b1;
+
+    let seq;
+    let s;
+    let stepsBass = [];
+    let stepsKick = [];
+    let stepsSnare = [];
+    let stepsAmen = [];
+    let currentStep = 0;
+
+    let filt;
+    let scale;
+    let transp;
+    let wet;
+    let dirt;
+    let slide;
+    let bvol;
+    let blen;
+    let kvol;
+    let klen;
+    let svol;
+    let slen;
+    let avol;
+    let alen;
+
+
+
+    let canvas;
+    let prevw;
+    let widthv;
+    let pt = 0;
+    let mj7s = [0, 2, 4, 5, 7, 9, 11, 12];
+    let mn7s = [0, 2, 3, 5, 7, 8, 10, 12];
+    let dm7s = [0, 2, 4, 5, 7, 9, 10, 12];
+    let hd7s = [0, 1, 3, 5, 6, 8, 10, 12];
+    let mj6s = [0, 2, 4, 5, 7, 9, 11, 12];
+    let mn6s = [0, 2, 3, 5, 7, 9, 10, 12];
+    let db9s = [0, 1, 4, 5, 7, 8, 10, 12];
+    let alds = [0, 2, 4, 6, 7, 9, 10, 12];
+    let augs = [0, 2, 4, 6, 8, 10, 12, 14];
+    let dims = [0, 3, 6, 9, 12, 15, 18, 21];
+    const scales = [
+      mj7s,
+      mn7s,
+      dm7s,
+      hd7s,
+      mj6s,
+      mn6s,
+      db9s,
+      alds,
+      augs,
+      dims,
+    ];
+
+    let faustN;
+    let tf;
+
+    function preload() {
+      tf = loadFont('./acidworkassets/font/computerfont.ttf');
+    }
+
+    function setup() {
+      var canvasDiv = document.getElementById("myCanvas");
+      widthv = myCanvas.offsetWidth;
+      prevw = widthv;
+
+      canvas = createCanvas(widthv, windowHeight * 2, WEBGL);
+      canvas.style("display", "block"); // Removes extra margins
+      canvas.parent("myCanvas");
+
+
+      // <color name="Persian orange" hex="CD947A" r="205" g="148" b="122" />
+      // <color name="Chinese Violet" hex="71587E" r="113" g="88" b="126" />
+      // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
+      // <color name="Hunyadi yellow" hex="F0B650" r="240" g="182" b="80" />
+      // <color name="Keppel" hex="67B5A0" r="103" g="181" b="160" />
+
+
+      s = new slidey(
+        width - (width / 4) * 1.6,
+        height / 32,
+        width / 3,
+        30,
+        0,
+        "tempo:", 40
+      );
+      filter = new slidey(
+        width / 4,
+        height * 0.42,
+        width / 2,
+        15, 0,
+        "filter:", 40
+
+      );
+      scale = new slidey(
+        width / 4,
+        height * 0.46,
+        width / 2,
+        15,
+        0, "scale:", 40
+
+      );
+      transp = new slidey(
+        width / 4,
+        height * 0.5,
+        width / 2,
+        15,
+        0, "transpose:", 40
+
+      );
+
+
+      wet = new slidey(
+        width / 4,
+        height * 0.54,
+        width / 2,
+        15,
+        0, "wet:", 40
+
+      );
+      dirt = new slidey(
+        width / 4,
+        height * 0.58,
+        width / 2,
+        15,
+        0, "dirt:", 40
+
+      );
+      slide = new slidey(
+        width / 4,
+        height * 0.62,
+        width / 2,
+        15,
+        0, "slide:", 40
+
+      );
+
       // Set:
 
-      let amen;
-      let amenGain;
-      let synthGain;
-      let kickGain;
-      let snareGain;
-      let wet;
-      let sstl;
-      let stl;
-      let astl;
-      let smootha;
-      let kstl;
-      let Dist;
+      /////// global params /////////
+
+      // amenGain
+      // synthGain
+      // kickGain
+      // snareGain
+      // Dist
+      // wet
+      // smootha
+
+      /////// in the component /////////
+      // amen
+      //kp
+      //sp
+      // sstl
+      // stl
+      // astl
+      // kstl
+
 
       // Get:
 
-      let gstep ;
-      let gsstep;
-      let gkstep;
-      let gastep;
+      // step
+      // sstep
+      // kstep
+      // astep
 
-      let st;
-      let gui;
-      let b1;
+      // let bvol;
+      // let blen;
+      // let kvol;
+      // let klen;
+      // let svol;
+      // let slen;
+      // let avol;
+      // let alen;
 
-      let seq;
-      let s;
-      let stepsBass = [];
-      let stepsKick = [];
-      let stepsSnare = [];
-      let stepsAmen = [];
-      let currentStep = 0;
-      let d1;
-      let d2;
-      let d3;
-      let d4;
-      let actx;
-      let freq;
-      let amp;
-      let sr;
-      let drift;
-      let workletNode;
-      let filt;
-      let scale;
-      let transp;
-      let canvas;
-      let prevw;
-      let widthv;
-      let pt = 0;
-      let mj7s = [0, 2, 4, 5, 7, 9, 11, 12];
-      let mn7s = [0, 2, 3, 5, 7, 8, 10, 12];
-      let dm7s = [0, 2, 4, 5, 7, 9, 10, 12];
-      let hd7s = [0, 1, 3, 5, 6, 8, 10, 12];
-      let mj6s = [0, 2, 4, 5, 7, 9, 11, 12];
-      let mn6s = [0, 2, 3, 5, 7, 9, 10, 12];
-      let db9s = [0, 1, 4, 5, 7, 8, 10, 12];
-      let alds = [0, 2, 4, 6, 7, 9, 10, 12];
-      let augs = [0, 2, 4, 6, 8, 10, 12, 14];
-      let dims = [0, 3, 6, 9, 12, 15, 18, 21];
-      const scales = [
-        mj7s,
-        mn7s,
-        dm7s,
-        hd7s,
-        mj6s,
-        mn6s,
-        db9s,
-        alds,
-        augs,
-        dims,
-      ];
+      bvol = new slidey(
+        width / 16,
+        (height / 12) + 100,
+        width / 4,
+        15,
+        0, "bassvol:", 20
 
-      let faustN;
+      );
+      blen = new slidey(
+        (width / 2) + (width / 16),
+        (height / 12) + 100,
+        width / 4,
+        15,
+        0, "basslen:", 20
 
-      function setup() {
-        var canvasDiv = document.getElementById("myCanvas");
-        widthv = myCanvas.offsetWidth;
-        prevw = widthv;
+      );
+      kvol = new slidey(
+        width / 16,
+        (height / 12) * 2 + 100,
+        width / 4,
+        15,
+        0, "kickvol:", 20
 
-        canvas = createCanvas(widthv, windowHeight*2);
-        canvas.style("display", "block"); // Removes extra margins
-        canvas.parent("myCanvas");
+      );
+      klen = new slidey(
+        (width / 2) + (width / 16),
+        (height / 12) * 2 + 100,
+        width / 4,
+        15,
+        0, "kicklen:", 20
 
-        b1 = new tog(
-          (width / 4) * 2,
-          height / 30,
-          20,
-          20,
-          "#CD947A",
-          "#71587E"
-        );
+      );
+      svol = new slidey(
+        width / 16,
+        (height / 12) * 3 + 100,
+        width / 4,
+        15,
+        0, "snarevol:", 20
 
-        // <color name="Persian orange" hex="CD947A" r="205" g="148" b="122" />
-        // <color name="Chinese Violet" hex="71587E" r="113" g="88" b="126" />
-        // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
-        // <color name="Hunyadi yellow" hex="F0B650" r="240" g="182" b="80" />
-        // <color name="Keppel" hex="67B5A0" r="103" g="181" b="160" />
+      );
+      slen = new slidey(
+        (width / 2) + (width / 16),
+        (height / 12) * 3 + 100,
+        width / 4,
+        15,
+        0, "snarelen:", 20
+
+      );
+      avol = new slidey(
+        width / 16,
+        (height / 12) * 4 + 100,
+        width / 4,
+        15,
+        0, "amenvol:", 20
+
+      );
+      alen = new slidey(
+        (width / 2) + (width / 16),
+        (height / 12) * 4 + 100,
+        width / 4,
+        15,
+        0, "amenlen:", 20
+
+      );
 
 
-        s = new slidey(
-          width - (width / 4) * 1.6,
-          height / 16,
-          width / 3,
-          30,
-          0,
+      for (var i = 0; i < 8; i++) {
+        let stb = new stepUnit(
+          width / 8 + (i * width) / 10,
+          height / 12,
+          width / 28,
+          60,
           "#CD947A",
           "#71587E",
           0
         );
-        filter = new slidey(
-          width / 4,
-          height * 0.82,
-          width / 2,
-          15,
-          0,
+        stepsBass.push(stb);
+
+        let stk = new stepUnit(
+          width / 8 + (i * width) / 10,
+          (height / 12) * 2,
+          width / 28,
+          60,
           "#CD947A",
           "#71587E",
           0
         );
-        scale = new slidey(
-          width / 4,
-          height * 0.86,
-          width / 2,
-          15,
-          0,
+        stepsKick.push(stk);
+
+        let sts = new stepUnit(
+          width / 8 + (i * width) / 10,
+          (height / 12) * 3,
+          width / 28,
+          60,
           "#CD947A",
           "#71587E",
           0
         );
-        transp = new slidey(
-          width / 4,
-          height * 0.9,
-          width / 2,
-          15,
-          0,
+        stepsSnare.push(sts);
+
+        let sta = new stepUnit(
+          width / 8 + (i * width) / 10,
+          (height / 12) * 4,
+          width / 28,
+          60,
           "#CD947A",
           "#71587E",
           0
         );
-                // Set:
-
-        /////// global params /////////
-       
-        // amenGain
-        // synthGain
-        // kickGain
-        // snareGain
-        // Dist
-        // wet
-        // smootha
-
-        /////// in the component /////////
-        // amen
-        // sstl
-        // stl
-        // astl
-        // kstl
-
-
-        // Get:
-
-        // step
-        // sstep
-        // kstep
-        // astep
-
-
-
-
-
-
-        for (var i = 0; i < 8; i++) {
-          let stb = new stepUnit(
-            width / 8 + (i * width) / 10,
-            height / 6,
-            width / 24,
-            60,
-            "#CD947A",
-            "#71587E",
-            0
-          );
-          stepsBass.push(stb);
-          let stk = new stepUnit(
-            width / 8 + (i * width) / 10,
-            (height / 6) * 2,
-            width / 24,
-            60,
-            "#CD947A",
-            "#71587E",
-            0
-          );
-          stepsKick.push(stk);
-          let sts = new stepUnit(
-            width / 8 + (i * width) / 10,
-            (height / 6) * 3,
-            width / 24,
-            60,
-            "#CD947A",
-            "#71587E",
-            0
-          );
-          stepsSnare.push(sts);
-          let sta = new stepUnit(
-            width / 8 + (i * width) / 10,
-            (height / 6) * 4,
-            width / 24,
-            60,
-            "#CD947A",
-            "#71587E",
-            0
-          );
-          stepsAmen.push(sta);
-        }
-
-        for (st in stepsBass) {
-          stepsBass[st].draw("#CD947A", "#71587E", 0);
-          stepsKick[st].draw("#CD947A", "#71587E", 0);
-          stepsSnare[st].draw("#CD947A", "#71587E", 0);
-          stepsAmen[st].draw("#CD947A", "#71587E", 0);
-        }
+        stepsAmen.push(sta);
       }
 
-      function draw() {
-        background("#67B5A0");
-        // drawGui();
-        randb = random(0, 7);
 
-        for (st in stepsBass) {
-          stepsBass[st].draw("#CD947A", "#71587E", 0);
-          stepsKick[st].draw("#CD947A", "#71587E", 0);
-          stepsSnare[st].draw("#CD947A", "#71587E", 0);
-          stepsAmen[st].draw("#CD947A", "#71587E", 0);
-        }
-        // Set:
 
-        // amen
-        // amenGain
-        // synthGain
-        // kickGain
-        // snareGain
-        // wet
-        // sstl
-        // stl
-        // astl
-        // smootha
-        // kstl
-        // Dist
+      for (st in stepsBass) {
+        stepsBass[st].draw("#CD947A", "#71587E", 0);
+        stepsKick[st].draw("#CD947A", "#71587E", 0);
+        stepsSnare[st].draw("#CD947A", "#71587E", 0);
+        stepsAmen[st].draw("#CD947A", "#71587E", 0);
+      }
+    }
 
-        // Get:
+    function outputHandler(path, value) {
 
-        // step
-        // sstep
-        // kstep
-        // astep
-        s.draw("#CD947A", "#71587E", 0);
-        b1.draw("#CD947A", "#71587E", 0);
-        filter.draw("#CD947A", "#71587E", 0);
-        scale.draw("#CD947A", "#71587E", 0);
-        transp.draw("#CD947A", "#71587E", 0);
-        let flv = filter.getValue(30, 2000, 0);
+      if (path == "/acidworkv3_1_2/step") {
+        gstep = value;
 
-        if (faustN) {
-            
-        // let outputHandler = {path:"/acidworkv3_1_2/step",value: gstep};
-        // faustN.faustNode.setOutputParamHandler(outputHandler);
-  
-     
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/temp",
-            s.getValue(20, 200, 1)
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/tran",
-            transp.getValue(24, 100, 1)
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/filt",
-            filter.getValue(30, 1000, 0)
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/c1",
-            stepsBass[0].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/c2",
-            stepsBass[1].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/c3",
-            stepsBass[2].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/c4",
-            stepsBass[3].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/c5",
-            stepsBass[4].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/c6",
-            stepsBass[5].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/c7",
-            stepsBass[6].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/c8",
-            stepsBass[7].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/kc1",
-            stepsKick[0].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/kc2",
-            stepsKick[1].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/kc3",
-            stepsKick[2].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/kc4",
-            stepsKick[3].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/kc5",
-            stepsKick[4].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/kc6",
-            stepsKick[5].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/kc7",
-            stepsKick[6].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/kc8",
-            stepsKick[7].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sc1",
-            stepsSnare[0].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sc2",
-            stepsSnare[1].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sc3",
-            stepsSnare[2].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sc4",
-            stepsSnare[3].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sc5",
-            stepsSnare[4].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sc6",
-            stepsSnare[5].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sc7",
-            stepsSnare[6].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sc8",
-            stepsSnare[7].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sp1",
-            stepsAmen[0].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sp2",
-            stepsAmen[1].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sp3",
-            stepsAmen[2].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sp4",
-            stepsAmen[3].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sp5",
-            stepsAmen[4].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sp6",
-            stepsAmen[5].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sp7",
-            stepsAmen[6].getTog()
-          );
-          faustN.faustNode.setParamValue(
-            "/acidworkv3_1_2/sp8",
-            stepsAmen[7].getTog()
-          );
-        //   faustN.faustNode.setParamValue(
-        //     "/acidworkv3_1_2/s"+toString(gstep+1),
-        //     stepsBass[gstep].getSlideA(0, 12, 1)
-        //   );
-        //   console.log("/acidworkv3_1_2/s"+toString(gstep+1));
-        
-        //   faustN.faustNode.setParamValue(
-        //     "/acidworkv3_1_2/s2",
-        //     stepsBass[1].getSlideA(0, 12, 1)
-        //   );
-        //   faustN.faustNode.setParamValue(
-        //     "/acidworkv3_1_2/s3",
-        //     stepsBass[2].getSlideA(0, 12, 1)
-        //   );
-        //   faustN.faustNode.setParamValue(
-        //     "/acidworkv3_1_2/s4",
-        //     stepsBass[3].getSlideA(0, 12, 1)
-        //   );
-        //   faustN.faustNode.setParamValue(
-        //     "/acidworkv3_1_2/s5",
-        //     stepsBass[4].getSlideA(0, 12, 1)
-        //   );
-        //   faustN.faustNode.setParamValue(
-        //     "/acidworkv3_1_2/s6",
-        //     stepsBass[5].getSlideA(0, 12, 1)
-        //   );
-        //   faustN.faustNode.setParamValue(
-        //     "/acidworkv3_1_2/s7",
-        //     stepsBass[6].getSlideA(0, 12, 1)
-        //   );
-        //   faustN.faustNode.setParamValue(
-        //     "/acidworkv3_1_2/s8",
-        //     stepsBass[7].getSlideA(0, 12, 1)
-        //   );
-        }
+      }
+      if (path == "/acidworkv3_1_2/kstep") {
+        gkstep = value;
+
+      }
+      if (path == "/acidworkv3_1_2/sstep") {
+        gsstep = value;
+
+      }
+      if (path == "/acidworkv3_1_2/astep") {
+        gastep = value;
+
+      }
+    }
+    /////////////////////////////////DRAW///////////////////////////////////
+
+    function draw() {
+      background("#67B5A0");
+      translate(-width / 2, -height / 2);
+      // drawGui();
+      randb = random(0, 7);
+
+      for (st in stepsBass) {
+        stepsBass[st].draw("#CD947A", "#71587E", 0);
+        stepsKick[st].draw("#CD947A", "#71587E", 0);
+        stepsSnare[st].draw("#CD947A", "#71587E", 0);
+        stepsAmen[st].draw("#CD947A", "#71587E", 0);
       }
 
-      // Set to > 0 if the DSP is polyphonic
-      const FAUST_DSP_VOICES = 0;
 
-      (async () => {
-        // Create audio context activation button
-        /** @type {HTMLButtonElement} */
-        const $buttonDsp = document.getElementById("button-dsp");
-        const { createFaustNode } = await import("./create-node.js");
-        const play = (node) => {
-          node.keyOn(0, 60, 100);
-          setTimeout(() => node.keyOn(0, 64, 100), 1000);
-          setTimeout(() => node.keyOn(0, 67, 100), 2000);
-          setTimeout(() => node.allNotesOff(), 5000);
-          setTimeout(() => play(node), 7000);
-        };
-        // Function to activate audio context
-        $buttonDsp.disabled = true;
-        $buttonDsp.onclick = async () => {
-          if (audioContext.state === "running") {
-            $buttonDsp.textContent = "Suspended";
-            await audioContext.suspend();
-          } else if (audioContext.state === "suspended") {
-            $buttonDsp.textContent = "Running";
-            await audioContext.resume();
-            if (FAUST_DSP_VOICES) play(faustNode);
-          }
-        };
+      // Set:
 
-        // Create Faust node
-        faustN = await createFaustNode(
-          audioContext,
-          "acidworkv3_1_2",
-          FAUST_DSP_VOICES
+      /////// global params /////////
+
+      // amenGain
+      // synthGain
+      // kickGain
+      // snareGain
+      // Dist
+      // wet
+      // smootha
+
+      /////// in the component /////////
+      // amen
+      //kp
+      //sp
+      // sstl
+      // stl
+      // astl
+      // kstl
+
+
+      // Get:
+
+      // step
+      // sstep
+      // kstep
+      // astep
+
+
+
+      s.draw("#CD947A", "#71587E", 0);
+      filter.draw("#CD947A", "#71587E", 0);
+      scale.draw("#CD947A", "#71587E", 0);
+      transp.draw("#CD947A", "#71587E", 0);
+      wet.draw("#CD947A", "#71587E", 0);
+      dirt.draw("#CD947A", "#71587E", 0);
+      slide.draw("#CD947A", "#71587E", 0);
+      bvol.draw("#CD947A", "#71587E", 0);
+      blen.draw("#CD947A", "#71587E", 0);
+      kvol.draw("#CD947A", "#71587E", 0);
+      klen.draw("#CD947A", "#71587E", 0);
+      svol.draw("#CD947A", "#71587E", 0);
+      slen.draw("#CD947A", "#71587E", 0);
+      avol.draw("#CD947A", "#71587E", 0);
+      alen.draw("#CD947A", "#71587E", 0);
+
+      let flv = filter.getValue(30, 2000, 0);
+
+      if (faustN) {
+
+
+
+        faustN.faustNode.setOutputParamHandler(outputHandler);
+
+
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/temp",
+          s.getValue(20, 200, 1)
         );
-        faustNode = faustN.faustNode;
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/tran",
+          transp.getValue(24, 100, 1)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/filt",
+          filter.getValue(30, 1000, 0)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/wet",
+          wet.getValue(0, .3, 0)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/dist",
+          dirt.getValue(1, 8, 0)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/smootha",
+          slide.getValue(0, .02, 0)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/stl",
+          blen.getValue(8, 1, 1)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/kstl",
+          klen.getValue(8,1, 1)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/sstl",
+          slen.getValue(8,1, 1)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/astl",
+          alen.getValue(8,1, 1)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/synthGain",
+          bvol.getValue(0, .5, 0)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/kickGain",
+          kvol.getValue(0, .5, 0)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/snareGain",
+          svol.getValue(0, .5, 0)
+        );
+        faustN.faustNode.setParamValue(
+          "/acidworkv3_1_2/amenGain",
+          avol.getValue(0, .5, 0)
+        );
 
-        if (!faustNode) throw new Error("Faust DSP not compiled");
 
-        // Connect the Faust node to the audio output
-        faustNode.connect(audioContext.destination);
 
-        // Connect the Faust node to the audio input
-        if (faustNode.getNumInputs() > 0) {
-          const { connectToAudioInput } = await import("./create-node.js");
-          await connectToAudioInput(audioContext, null, faustNode, null);
+        if (gstep != undefined) {
+          faustN.faustNode.setParamValue(
+            `/acidworkv3_1_2/s${gstep + 1}`,
+            stepsBass[gstep].getSlideA(0, 12, 1)
+          );
+          faustN.faustNode.setParamValue(
+            `/acidworkv3_1_2/c${gstep + 1}`,
+            stepsBass[gstep].getTog()
+          );
         }
 
-        // Create Faust node activation button
-        $buttonDsp.disabled = false;
+        if (gkstep != undefined) {
+          faustN.faustNode.setParamValue(
+            `/acidworkv3_1_2/kp`,
+            stepsKick[gkstep].getSlideA(0, .7, 0)
+          );
+          faustN.faustNode.setParamValue(
+            `/acidworkv3_1_2/kc${gkstep + 1}`,
+            stepsKick[gkstep].getTog()
+          );
+        }
 
-        // Set page title to the DSP name
-        document.title = name;
-        console.log(faustNode);
-      
-        // const c1 = document.querySelector("#c1ui");
-      })();
-    </script>
-  </body>
+        if (gsstep != undefined) {
+          faustN.faustNode.setParamValue(
+            `/acidworkv3_1_2/sp`,
+            stepsSnare[gsstep].getSlideA(0, .7, 0)
+          );
+          faustN.faustNode.setParamValue(
+            `/acidworkv3_1_2/sc${gsstep + 1}`,
+            stepsSnare[gsstep].getTog()
+          );
+        }
+
+        if (gastep != undefined) {
+          faustN.faustNode.setParamValue(
+            `/acidworkv3_1_2/amen`,
+            stepsAmen[gastep].getSlideA(0, 1, 0)
+          );
+          faustN.faustNode.setParamValue(
+            `/acidworkv3_1_2/sp${gastep + 1}`,
+            stepsAmen[gastep].getTog()
+          );
+        }
+
+      }
+    }
+
+    // Set to > 0 if the DSP is polyphonic
+    const FAUST_DSP_VOICES = 0;
+
+    (async () => {
+      // Create audio context activation button
+      /** @type {HTMLButtonElement} */
+      const $buttonDsp = document.getElementById("button-dsp");
+      const { createFaustNode } = await import("./acidworkassets/create-node.js");
+      const play = (node) => {
+        node.keyOn(0, 60, 100);
+        setTimeout(() => node.keyOn(0, 64, 100), 1000);
+        setTimeout(() => node.keyOn(0, 67, 100), 2000);
+        setTimeout(() => node.allNotesOff(), 5000);
+        setTimeout(() => play(node), 7000);
+      };
+      // Function to activate audio context
+      $buttonDsp.disabled = true;
+      $buttonDsp.onclick = async () => {
+        if (audioContext.state === "running") {
+          $buttonDsp.textContent = "Suspended";
+          await audioContext.suspend();
+        } else if (audioContext.state === "suspended") {
+          $buttonDsp.textContent = "Running";
+          await audioContext.resume();
+          if (FAUST_DSP_VOICES) play(faustNode);
+        }
+      };
+
+      // Create Faust node
+      faustN = await createFaustNode(
+        audioContext,
+        "acidworkv3_1_2",
+        FAUST_DSP_VOICES
+      );
+      faustNode = faustN.faustNode;
+
+      if (!faustNode) throw new Error("Faust DSP not compiled");
+
+      // Connect the Faust node to the audio output
+      faustNode.connect(audioContext.destination);
+
+      // Connect the Faust node to the audio input
+      if (faustNode.getNumInputs() > 0) {
+        const { connectToAudioInput } = await import("./acidworkassets/create-node.js");
+        await connectToAudioInput(audioContext, null, faustNode, null);
+      }
+
+      // Create Faust node activation button
+      $buttonDsp.disabled = false;
+
+      // Set page title to the DSP name
+      document.title = name;
+      console.log(faustNode);
+
+      // const c1 = document.querySelector("#c1ui");
+    })();
+
+
+
+
+  </script>
+</body>
+
 </html>

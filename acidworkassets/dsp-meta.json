@@ -1,0 +1,950 @@
+{
+    "name": "acidworkv3_1_2",
+    "filename": "acidworkv3_1_2.dsp",
+    "version": "2.78.3",
+    "compile_options": "-lang wasm-i -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -single -ftz 2",
+    "library_list": [
+        "/usr/share/faust/soundfiles.lib",
+        "/usr/share/faust/stdfaust.lib",
+        "/usr/share/faust/aanl.lib",
+        "/usr/share/faust/oscillators.lib",
+        "/usr/share/faust/basics.lib",
+        "/usr/share/faust/maths.lib",
+        "/usr/share/faust/platform.lib",
+        "/usr/share/faust/signals.lib",
+        "/usr/share/faust/envelopes.lib",
+        "/usr/share/faust/filters.lib",
+        "/usr/share/faust/noises.lib",
+        "/usr/share/faust/interpolators.lib",
+        "/usr/share/faust/routes.lib",
+        "/usr/share/faust/misceffects.lib",
+        "/usr/share/faust/delays.lib"
+    ],
+    "include_pathnames": [
+        "/share/faust",
+        "/usr/local/share/faust",
+        "/usr/share/faust",
+        "."
+    ],
+    "size": 8651608,
+    "code": "ENykFiQPHw==",
+    "inputs": 0,
+    "outputs": 2,
+    "meta": [
+        {
+            "aanl.lib/ADAA1:author": "Dario Sanfilippo"
+        },
+        {
+            "aanl.lib/ADAA1:copyright": "Copyright (C) 2021 Dario Sanfilippo     <sanfilippo.dario@gmail.com>"
+        },
+        {
+            "aanl.lib/ADAA1:license": "LGPL v3.0 license"
+        },
+        {
+            "aanl.lib/name": "Faust Antialiased Nonlinearities"
+        },
+        {
+            "aanl.lib/tanh1:author": "Dario Sanfilippo"
+        },
+        {
+            "aanl.lib/tanh1:copyright": "Copyright (C) 2021 Dario Sanfilippo     <sanfilippo.dario@gmail.com>"
+        },
+        {
+            "aanl.lib/tanh1:license": "LGPL v3.0 license"
+        },
+        {
+            "aanl.lib/version": "1.4.0"
+        },
+        {
+            "basics.lib/counter:author": "Stephane Letz"
+        },
+        {
+            "basics.lib/name": "Faust Basic Element Library"
+        },
+        {
+            "basics.lib/version": "1.21.0"
+        },
+        {
+            "compile_options": "-lang wasm-i -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -single -ftz 2"
+        },
+        {
+            "delays.lib/name": "Faust Delay Library"
+        },
+        {
+            "delays.lib/version": "1.1.0"
+        },
+        {
+            "envelopes.lib/adsr:author": "Yann Orlarey and Andrey Bundin"
+        },
+        {
+            "envelopes.lib/ar:author": "Yann Orlarey, Stéphane Letz"
+        },
+        {
+            "envelopes.lib/author": "GRAME"
+        },
+        {
+            "envelopes.lib/copyright": "GRAME"
+        },
+        {
+            "envelopes.lib/license": "LGPL with exception"
+        },
+        {
+            "envelopes.lib/name": "Faust Envelope Library"
+        },
+        {
+            "envelopes.lib/version": "1.3.0"
+        },
+        {
+            "filename": "acidworkv3_1_2.dsp"
+        },
+        {
+            "filters.lib/fir:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/fir:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/fir:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/highpass:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/highpass:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/iir:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/iir:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/iir:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/lowpass0_highpass1": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/lowpass0_highpass1:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/lowpass:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/lowpass:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/lowpass:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/name": "Faust Filters Library"
+        },
+        {
+            "filters.lib/nlf2:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/nlf2:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/nlf2:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/resonhp:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/resonhp:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/resonhp:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/resonlp:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/resonlp:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/resonlp:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/tf1:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/tf1:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/tf1:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/tf1s:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/tf1s:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/tf1s:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/tf2:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/tf2:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/tf2:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/tf2s:author": "Julius O. Smith III"
+        },
+        {
+            "filters.lib/tf2s:copyright": "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>"
+        },
+        {
+            "filters.lib/tf2s:license": "MIT-style STK-4.3 license"
+        },
+        {
+            "filters.lib/version": "1.6.0"
+        },
+        {
+            "interpolators.lib/interpolate_cosine:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolate_cosine:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolate_cubic:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolate_cubic:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolate_linear:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolate_linear:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_cosine:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_cosine:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_cubic:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_cubic:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_four_points:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_four_points:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_linear:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_linear:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_select:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_select:licence": "MIT"
+        },
+        {
+            "interpolators.lib/interpolator_two_points:author": "Stéphane Letz"
+        },
+        {
+            "interpolators.lib/interpolator_two_points:licence": "MIT"
+        },
+        {
+            "interpolators.lib/name": "Faust Interpolator Library"
+        },
+        {
+            "interpolators.lib/version": "1.4.0"
+        },
+        {
+            "maths.lib/author": "GRAME"
+        },
+        {
+            "maths.lib/copyright": "GRAME"
+        },
+        {
+            "maths.lib/license": "LGPL with exception"
+        },
+        {
+            "maths.lib/name": "Faust Math Library"
+        },
+        {
+            "maths.lib/version": "2.8.1"
+        },
+        {
+            "misceffects.lib/echo:author": "Romain Michon"
+        },
+        {
+            "misceffects.lib/name": "Misc Effects Library"
+        },
+        {
+            "misceffects.lib/version": "2.5.0"
+        },
+        {
+            "name": "acidworkv3_1_2"
+        },
+        {
+            "noises.lib/name": "Faust Noise Generator Library"
+        },
+        {
+            "noises.lib/version": "1.4.1"
+        },
+        {
+            "oscillators.lib/name": "Faust Oscillator Library"
+        },
+        {
+            "oscillators.lib/saw2ptr:author": "Julius O. Smith III"
+        },
+        {
+            "oscillators.lib/saw2ptr:license": "STK-4.3"
+        },
+        {
+            "oscillators.lib/version": "1.5.1"
+        },
+        {
+            "platform.lib/name": "Generic Platform Library"
+        },
+        {
+            "platform.lib/version": "1.3.0"
+        },
+        {
+            "routes.lib/name": "Faust Signal Routing Library"
+        },
+        {
+            "routes.lib/version": "1.2.0"
+        },
+        {
+            "signals.lib/name": "Faust Signal Routing Library"
+        },
+        {
+            "signals.lib/version": "1.6.0"
+        },
+        {
+            "soundfiles.lib/name": "Faust Soundfile Library"
+        },
+        {
+            "soundfiles.lib/version": "1.7.0"
+        }
+    ],
+    "ui": [
+        {
+            "type": "vgroup",
+            "label": "acidworkv3_1_2",
+            "items": [
+                {
+                    "type": "soundfile",
+                    "label": "0x00",
+                    "varname": "fSoundfile0",
+                    "url": "{-https://raw.githubusercontent.com/stanybebe/stanybebe.github.io/master/A04.mp3-;-https://raw.githubusercontent.com/stanybebe/stanybebe.github.io/master/A05.mp3-;-https://raw.githubusercontent.com/stanybebe/stanybebe.github.io/master/A06.mp3-;-https://raw.githubusercontent.com/stanybebe/stanybebe.github.io/master/A07.mp3-;-https://raw.githubusercontent.com/stanybebe/stanybebe.github.io/master/A08.mp3-}",
+                    "address": "/acidworkv3_1_2/0x00",
+                    "index": 262144
+                },
+                {
+                    "type": "hslider",
+                    "label": "amen",
+                    "varname": "fHslider24",
+                    "shortname": "amen",
+                    "address": "/acidworkv3_1_2/amen",
+                    "index": 8651564,
+                    "init": 0,
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.001
+                },
+                {
+                    "type": "hslider",
+                    "label": "amenGain",
+                    "varname": "fHslider22",
+                    "shortname": "amenGain",
+                    "address": "/acidworkv3_1_2/amenGain",
+                    "index": 8651372,
+                    "init": 0.5,
+                    "min": 0,
+                    "max": 0.5,
+                    "step": 0.01
+                },
+                {
+                    "type": "vbargraph",
+                    "label": "astep",
+                    "varname": "fVbargraph3",
+                    "shortname": "astep",
+                    "address": "/acidworkv3_1_2/astep",
+                    "index": 8651472,
+                    "min": 0,
+                    "max": 7
+                },
+                {
+                    "type": "hslider",
+                    "label": "astl",
+                    "varname": "fHslider23",
+                    "shortname": "astl",
+                    "address": "/acidworkv3_1_2/astl",
+                    "index": 8651468,
+                    "init": 8,
+                    "min": 1,
+                    "max": 8,
+                    "step": 1
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c1",
+                    "varname": "fCheckbox0",
+                    "shortname": "c1",
+                    "address": "/acidworkv3_1_2/c1",
+                    "index": 262300
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c2",
+                    "varname": "fCheckbox1",
+                    "shortname": "c2",
+                    "address": "/acidworkv3_1_2/c2",
+                    "index": 262304
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c3",
+                    "varname": "fCheckbox2",
+                    "shortname": "c3",
+                    "address": "/acidworkv3_1_2/c3",
+                    "index": 262308
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c4",
+                    "varname": "fCheckbox3",
+                    "shortname": "c4",
+                    "address": "/acidworkv3_1_2/c4",
+                    "index": 262312
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c5",
+                    "varname": "fCheckbox4",
+                    "shortname": "c5",
+                    "address": "/acidworkv3_1_2/c5",
+                    "index": 262316
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c6",
+                    "varname": "fCheckbox5",
+                    "shortname": "c6",
+                    "address": "/acidworkv3_1_2/c6",
+                    "index": 262320
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c7",
+                    "varname": "fCheckbox6",
+                    "shortname": "c7",
+                    "address": "/acidworkv3_1_2/c7",
+                    "index": 262324
+                },
+                {
+                    "type": "checkbox",
+                    "label": "c8",
+                    "varname": "fCheckbox7",
+                    "shortname": "c8",
+                    "address": "/acidworkv3_1_2/c8",
+                    "index": 262328
+                },
+                {
+                    "type": "hslider",
+                    "label": "dist",
+                    "varname": "fHslider14",
+                    "shortname": "dist",
+                    "address": "/acidworkv3_1_2/dist",
+                    "index": 8651124,
+                    "init": 1,
+                    "min": 1,
+                    "max": 8,
+                    "step": 0.01
+                },
+                {
+                    "type": "hslider",
+                    "label": "filt",
+                    "varname": "fHslider12",
+                    "shortname": "filt",
+                    "address": "/acidworkv3_1_2/filt",
+                    "index": 262364,
+                    "init": 200,
+                    "min": 30,
+                    "max": 1000,
+                    "step": 0.1
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc1",
+                    "varname": "fCheckbox8",
+                    "shortname": "kc1",
+                    "address": "/acidworkv3_1_2/kc1",
+                    "index": 8651160
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc2",
+                    "varname": "fCheckbox9",
+                    "shortname": "kc2",
+                    "address": "/acidworkv3_1_2/kc2",
+                    "index": 8651164
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc3",
+                    "varname": "fCheckbox10",
+                    "shortname": "kc3",
+                    "address": "/acidworkv3_1_2/kc3",
+                    "index": 8651168
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc4",
+                    "varname": "fCheckbox11",
+                    "shortname": "kc4",
+                    "address": "/acidworkv3_1_2/kc4",
+                    "index": 8651172
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc5",
+                    "varname": "fCheckbox12",
+                    "shortname": "kc5",
+                    "address": "/acidworkv3_1_2/kc5",
+                    "index": 8651176
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc6",
+                    "varname": "fCheckbox13",
+                    "shortname": "kc6",
+                    "address": "/acidworkv3_1_2/kc6",
+                    "index": 8651180
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc7",
+                    "varname": "fCheckbox14",
+                    "shortname": "kc7",
+                    "address": "/acidworkv3_1_2/kc7",
+                    "index": 8651184
+                },
+                {
+                    "type": "checkbox",
+                    "label": "kc8",
+                    "varname": "fCheckbox15",
+                    "shortname": "kc8",
+                    "address": "/acidworkv3_1_2/kc8",
+                    "index": 8651188
+                },
+                {
+                    "type": "hslider",
+                    "label": "kickGain",
+                    "varname": "fHslider16",
+                    "shortname": "kickGain",
+                    "address": "/acidworkv3_1_2/kickGain",
+                    "index": 8651140,
+                    "init": 0.5,
+                    "min": 0,
+                    "max": 0.5,
+                    "step": 0.01
+                },
+                {
+                    "type": "hslider",
+                    "label": "kp",
+                    "varname": "fHslider18",
+                    "shortname": "kp",
+                    "address": "/acidworkv3_1_2/kp",
+                    "index": 8651208,
+                    "init": 0,
+                    "min": 0,
+                    "max": 0.7,
+                    "step": 0.001
+                },
+                {
+                    "type": "vbargraph",
+                    "label": "kstep",
+                    "varname": "fVbargraph1",
+                    "shortname": "kstep",
+                    "address": "/acidworkv3_1_2/kstep",
+                    "index": 8651156,
+                    "min": 0,
+                    "max": 7
+                },
+                {
+                    "type": "hslider",
+                    "label": "kstl",
+                    "varname": "fHslider17",
+                    "shortname": "kstl",
+                    "address": "/acidworkv3_1_2/kstl",
+                    "index": 8651152,
+                    "init": 8,
+                    "min": 1,
+                    "max": 8,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s1",
+                    "varname": "fHslider4",
+                    "shortname": "s1",
+                    "address": "/acidworkv3_1_2/s1",
+                    "index": 262244,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s2",
+                    "varname": "fHslider5",
+                    "shortname": "s2",
+                    "address": "/acidworkv3_1_2/s2",
+                    "index": 262248,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s3",
+                    "varname": "fHslider6",
+                    "shortname": "s3",
+                    "address": "/acidworkv3_1_2/s3",
+                    "index": 262252,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s4",
+                    "varname": "fHslider7",
+                    "shortname": "s4",
+                    "address": "/acidworkv3_1_2/s4",
+                    "index": 262256,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s5",
+                    "varname": "fHslider8",
+                    "shortname": "s5",
+                    "address": "/acidworkv3_1_2/s5",
+                    "index": 262260,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s6",
+                    "varname": "fHslider9",
+                    "shortname": "s6",
+                    "address": "/acidworkv3_1_2/s6",
+                    "index": 262264,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s7",
+                    "varname": "fHslider10",
+                    "shortname": "s7",
+                    "address": "/acidworkv3_1_2/s7",
+                    "index": 262268,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "s8",
+                    "varname": "fHslider11",
+                    "shortname": "s8",
+                    "address": "/acidworkv3_1_2/s8",
+                    "index": 262272,
+                    "init": 0,
+                    "min": 0,
+                    "max": 12,
+                    "step": 1
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc1",
+                    "varname": "fCheckbox16",
+                    "shortname": "sc1",
+                    "address": "/acidworkv3_1_2/sc1",
+                    "index": 8651252
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc2",
+                    "varname": "fCheckbox17",
+                    "shortname": "sc2",
+                    "address": "/acidworkv3_1_2/sc2",
+                    "index": 8651256
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc3",
+                    "varname": "fCheckbox18",
+                    "shortname": "sc3",
+                    "address": "/acidworkv3_1_2/sc3",
+                    "index": 8651260
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc4",
+                    "varname": "fCheckbox19",
+                    "shortname": "sc4",
+                    "address": "/acidworkv3_1_2/sc4",
+                    "index": 8651264
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc5",
+                    "varname": "fCheckbox20",
+                    "shortname": "sc5",
+                    "address": "/acidworkv3_1_2/sc5",
+                    "index": 8651268
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc6",
+                    "varname": "fCheckbox21",
+                    "shortname": "sc6",
+                    "address": "/acidworkv3_1_2/sc6",
+                    "index": 8651272
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc7",
+                    "varname": "fCheckbox22",
+                    "shortname": "sc7",
+                    "address": "/acidworkv3_1_2/sc7",
+                    "index": 8651276
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sc8",
+                    "varname": "fCheckbox23",
+                    "shortname": "sc8",
+                    "address": "/acidworkv3_1_2/sc8",
+                    "index": 8651280
+                },
+                {
+                    "type": "hslider",
+                    "label": "smootha",
+                    "varname": "fHslider1",
+                    "shortname": "smootha",
+                    "address": "/acidworkv3_1_2/smootha",
+                    "index": 262200,
+                    "init": 0,
+                    "min": 0,
+                    "max": 0.02,
+                    "step": 0.0001
+                },
+                {
+                    "type": "hslider",
+                    "label": "snareGain",
+                    "varname": "fHslider19",
+                    "shortname": "snareGain",
+                    "address": "/acidworkv3_1_2/snareGain",
+                    "index": 8651232,
+                    "init": 0.5,
+                    "min": 0,
+                    "max": 0.5,
+                    "step": 0.01
+                },
+                {
+                    "type": "hslider",
+                    "label": "sp",
+                    "varname": "fHslider21",
+                    "shortname": "sp",
+                    "address": "/acidworkv3_1_2/sp",
+                    "index": 8651300,
+                    "init": 0,
+                    "min": 0,
+                    "max": 0.7,
+                    "step": 0.001
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp1",
+                    "varname": "fCheckbox24",
+                    "shortname": "sp1",
+                    "address": "/acidworkv3_1_2/sp1",
+                    "index": 8651476
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp2",
+                    "varname": "fCheckbox25",
+                    "shortname": "sp2",
+                    "address": "/acidworkv3_1_2/sp2",
+                    "index": 8651480
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp3",
+                    "varname": "fCheckbox26",
+                    "shortname": "sp3",
+                    "address": "/acidworkv3_1_2/sp3",
+                    "index": 8651484
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp4",
+                    "varname": "fCheckbox27",
+                    "shortname": "sp4",
+                    "address": "/acidworkv3_1_2/sp4",
+                    "index": 8651488
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp5",
+                    "varname": "fCheckbox28",
+                    "shortname": "sp5",
+                    "address": "/acidworkv3_1_2/sp5",
+                    "index": 8651492
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp6",
+                    "varname": "fCheckbox29",
+                    "shortname": "sp6",
+                    "address": "/acidworkv3_1_2/sp6",
+                    "index": 8651496
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp7",
+                    "varname": "fCheckbox30",
+                    "shortname": "sp7",
+                    "address": "/acidworkv3_1_2/sp7",
+                    "index": 8651500
+                },
+                {
+                    "type": "checkbox",
+                    "label": "sp8",
+                    "varname": "fCheckbox31",
+                    "shortname": "sp8",
+                    "address": "/acidworkv3_1_2/sp8",
+                    "index": 8651504
+                },
+                {
+                    "type": "vbargraph",
+                    "label": "sstep",
+                    "varname": "fVbargraph2",
+                    "shortname": "sstep",
+                    "address": "/acidworkv3_1_2/sstep",
+                    "index": 8651248,
+                    "min": 0,
+                    "max": 7
+                },
+                {
+                    "type": "hslider",
+                    "label": "sstl",
+                    "varname": "fHslider20",
+                    "shortname": "sstl",
+                    "address": "/acidworkv3_1_2/sstl",
+                    "index": 8651244,
+                    "init": 8,
+                    "min": 1,
+                    "max": 8,
+                    "step": 1
+                },
+                {
+                    "type": "vbargraph",
+                    "label": "step",
+                    "varname": "fVbargraph0",
+                    "shortname": "step",
+                    "address": "/acidworkv3_1_2/step",
+                    "index": 262240,
+                    "min": 0,
+                    "max": 7
+                },
+                {
+                    "type": "hslider",
+                    "label": "stl",
+                    "varname": "fHslider3",
+                    "shortname": "stl",
+                    "address": "/acidworkv3_1_2/stl",
+                    "index": 262236,
+                    "init": 8,
+                    "min": 1,
+                    "max": 8,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "synthGain",
+                    "varname": "fHslider15",
+                    "shortname": "synthGain",
+                    "address": "/acidworkv3_1_2/synthGain",
+                    "index": 8651128,
+                    "init": 0.5,
+                    "min": 0,
+                    "max": 0.5,
+                    "step": 0.01
+                },
+                {
+                    "type": "hslider",
+                    "label": "temp",
+                    "varname": "fHslider0",
+                    "shortname": "temp",
+                    "address": "/acidworkv3_1_2/temp",
+                    "index": 262168,
+                    "init": 120,
+                    "min": 20,
+                    "max": 200,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "tran",
+                    "varname": "fHslider2",
+                    "shortname": "tran",
+                    "address": "/acidworkv3_1_2/tran",
+                    "index": 262204,
+                    "init": 60,
+                    "min": 24,
+                    "max": 110,
+                    "step": 1
+                },
+                {
+                    "type": "hslider",
+                    "label": "wet",
+                    "varname": "fHslider13",
+                    "shortname": "wet",
+                    "address": "/acidworkv3_1_2/wet",
+                    "index": 8651112,
+                    "init": 0.3,
+                    "min": 0,
+                    "max": 0.3,
+                    "step": 0.01
+                }
+            ]
+        }
+    ]
+}

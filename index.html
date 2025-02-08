@@ -546,6 +546,8 @@
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
     const audioContext = new AudioCtx({ latencyHint: 0.00001 });
     audioContext.suspend();
+
+      console.log(audioContext);
       // Create audio context activation button
       /** @type {HTMLButtonElement} */
       const $buttonDsp = document.getElementById("button-dsp");

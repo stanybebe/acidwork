@@ -20,9 +20,7 @@
 
   <script>
     // Create audio context
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    const audioContext = new AudioCtx({ latencyHint: 0.00001 });
-    audioContext.suspend();
+
     // Set:
 
     let amen;
@@ -105,7 +103,7 @@
     let tf;
 
     function preload() {
-      tf = loadFont('./acidworkassets/font/computerfont.ttf');
+      tf = loadFont('./acidworkassets/font/Computerfont.ttf');
     }
 
     function setup() {
@@ -544,7 +542,10 @@
     // Set to > 0 if the DSP is polyphonic
     const FAUST_DSP_VOICES = 0;
 
-    (async () => {
+    (async () => { 
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const audioContext = new AudioCtx({ latencyHint: 0.00001 });
+    audioContext.suspend();
       // Create audio context activation button
       /** @type {HTMLButtonElement} */
       const $buttonDsp = document.getElementById("button-dsp");

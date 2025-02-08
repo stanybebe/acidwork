@@ -24,7 +24,7 @@ const createFaustNode = async (audioContext, dspName = "template", voices = 0, s
     const FAUST_DSP_HAS_EFFECT = false;
 
     // Import necessary Faust modules and data
-    const { FaustMonoDspGenerator, FaustPolyDspGenerator } = await import("./faustwasm/index.js");
+    const { FaustMonoDspGenerator, FaustPolyDspGenerator } = await import("./acidworkassets/faustwasm/index.js");
 
     // Load DSP metadata from JSON
     /** @type {FaustDspMeta} */

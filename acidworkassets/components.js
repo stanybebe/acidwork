@@ -18,6 +18,7 @@ class slidey {
     this.pv = 0;
     this.text = text;
     this.size = size;
+    this.clicked = false;
   }
 
   draw(ca, cb, cc) {
@@ -37,7 +38,6 @@ class slidey {
         fill(cb);
         rect(this.xpos + i, this.ypos, 6, this.height);
       }
-    
     }
 
     if (mouseIsPressed) {
@@ -47,6 +47,7 @@ class slidey {
         mouseY > this.ypos &&
         mouseY < this.ypos + this.height
       ) {
+        this.clicked = true;
         if (this.c1 < 0) {
           let clampX = constrain(
             mouseX,
@@ -57,6 +58,8 @@ class slidey {
           this.value = valmap;
           this.c1 = 1;
         }
+      } else {
+        this.clicked = false;
       }
     }
 
@@ -66,42 +69,43 @@ class slidey {
     fill(0);
     textFont(tf, this.size);
     let dm;
-    if(typeof this.map === 'number'){
-       if(this.s==0){
-        dm = floor(this.map*100)/100;
-       }
-       else{
+    if (typeof this.map === "number") {
+      if (this.s == 0) {
+        dm = floor(this.map * 100) / 100;
+      } else {
         dm = this.map;
-       }
+      }
     }
-    text(this.text+dm, this.xpos, this.ypos-this.height);
+    text(this.text + dm, this.xpos, this.ypos - this.height);
     pop();
   }
 
-  cache(){
-    if(this.pv!=this.value){
-      this.pv=this.value;
-      return true
-    }else{
+  cache() {
+    if (this.pv != this.value) {
+      this.pv = this.value;
+      return true;
+    } else {
       return false;
     }
   }
 
   getValue(omin_, omax_, s_) {
-    this.omax = omax_;
-    this.omin = omin_;
-    this.s = s_;
+    if (this.clicked) {
+      this.omax = omax_;
+      this.omin = omin_;
+      this.s = s_;
 
-    switch (this.s) {
-      case 0:
-        this.map = map(this.value, 0, 1, this.omin, this.omax);
-        break;
-      case 1:
-        this.map = round(map(this.value, 0, 1, this.omin, this.omax));
-        break;
+      switch (this.s) {
+        case 0:
+          this.map = map(this.value, 0, 1, this.omin, this.omax);
+          break;
+        case 1:
+          this.map = round(map(this.value, 0, 1, this.omin, this.omax));
+          break;
+      }
+
+      return this.map;
     }
-
-    return this.map;
   }
 }
 class tog {
@@ -121,13 +125,14 @@ class tog {
     this.xPos = xp;
     this.base = yp;
     this.pv = 0;
+
   }
 
-  cache(){
-    if(this.pv!=this.value){
-      this.pv=this.value;
-      return true
-    }else{
+  cache() {
+    if (this.pv != this.value) {
+      this.pv = this.value;
+      return true;
+    } else {
       return false;
     }
   }
@@ -166,10 +171,10 @@ class tog {
 }
 class stepUnit {
   constructor(x, y, w, h) {
-    this.togg = new tog(x+w/4, y, (w / 2), h);
-    this.sldA = new slidey(x - w /2, y + h / 2, w*1.5, h / 3,0,"",1);
+    this.togg = new tog(x + w / 4, y, w / 2, h);
+    this.sldA = new slidey(x - w / 2, y + h / 2, w * 1.5, h / 3, 0, "", 1);
     // this.sldB = new slidey(x - w /2, y + h, w*1.5, h / 3, 0,"",);
-    
+
     // <color name="Persian orange" hex="CD947A" r="205" g="148" b="122" />
     // <color name="Chinese Violet" hex="71587E" r="113" g="88" b="126" />
     // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
@@ -180,18 +185,18 @@ class stepUnit {
   draw(ca, cb, cc) {
     this.cola = cc;
     this.togg.draw(ca, cb, this.cola);
-    this.sldA.draw(ca,cb,this.cola);
-
+    this.sldA.draw(ca, cb, this.cola);
   }
-  setCol(c){
+  setCol(c) {
     this.cola = c;
   }
   getTog() {
     return this.togg.value;
   }
-  getSlideA(mn,mx,r) {
-    return this.sldA.getValue(mn,mx,r);
+  getSlideA(mn, mx, r) {
+    return this.sldA.getValue(mn, mx, r);
   }
-  getSlideB(mn,mx,r) {
-    return this.sldB.getValue(mn,mx,r);
-  }}
+  getSlideB(mn, mx, r) {
+    return this.sldB.getValue(mn, mx, r);
+  }
+}

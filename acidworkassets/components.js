@@ -90,7 +90,7 @@ class slidey {
   }
 
   getValue(omin_, omax_, s_) {
-    if (this.clicked) {
+
       this.omax = omax_;
       this.omin = omin_;
       this.s = s_;
@@ -105,7 +105,7 @@ class slidey {
       }
 
       return this.map;
-    }
+    
   }
 }
 class tog {

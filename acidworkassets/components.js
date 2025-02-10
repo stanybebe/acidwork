@@ -1,5 +1,5 @@
 class slidey {
-  constructor(x_pos, y_pos, w, h, val, text, size) {
+  constructor(x_pos, y_pos, w, h, val, text, size,d) {
     this.xpos = 0;
     this.ypos = 0;
     this.width = 0;
@@ -19,6 +19,7 @@ class slidey {
     this.text = text;
     this.size = size;
     this.clicked = false;
+    this.display = d;
   }
 
   draw(ca, cb, cc) {
@@ -66,17 +67,19 @@ class slidey {
     pop();
 
     push();
-    fill(0);
+    fill("#373c5c");
     textFont(tf, this.size);
-    let dm;
-    if (typeof this.map === "number") {
+  
+    if (typeof this.map === "number"&&this.display) {
+      let dm;
       if (this.s == 0) {
         dm = floor(this.map * 100) / 100;
       } else {
         dm = this.map;
       }
+      text(this.text + dm, this.xpos, this.ypos - this.height);
     }
-    text(this.text + dm, this.xpos, this.ypos - this.height);
+    
     pop();
   }
 
@@ -106,6 +109,10 @@ class slidey {
 
       return this.map;
     
+  }
+
+  setText(s){
+   this.text = s;
   }
 }
 class tog {
@@ -180,10 +187,10 @@ class stepUnit {
     // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
     // <color name="Hunyadi yellow" hex="F0B650" r="240" g="182" b="80" />
     // <color name="Keppel" hex="67B5A0" r="103" g="181" b="160" />
-    this.cola;
+    this.cola =0;
   }
-  draw(ca, cb, cc) {
-    this.cola = cc;
+  draw(ca, cb) {
+
     this.togg.draw(ca, cb, this.cola);
     this.sldA.draw(ca, cb, this.cola);
   }

@@ -77,31 +77,37 @@
     let prevw;
     let widthv;
     let pt = 0;
-    let mj7s = [0, 2, 4, 5, 7, 9, 11, 12];
-    let mn7s = [0, 2, 3, 5, 7, 8, 10, 12];
-    let dm7s = [0, 2, 4, 5, 7, 9, 10, 12];
-    let hd7s = [0, 1, 3, 5, 6, 8, 10, 12];
-    let mj6s = [0, 2, 4, 5, 7, 9, 11, 12];
-    let mn6s = [0, 2, 3, 5, 7, 9, 10, 12];
-    let db9s = [0, 1, 4, 5, 7, 8, 10, 12];
-    let alds = [0, 2, 4, 6, 7, 9, 10, 12];
-    let augs = [0, 2, 4, 6, 8, 10, 12, 14];
-    let dims = [0, 3, 6, 9, 12, 15, 18, 21];
+    let mj7s = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19];
+    let mn7s = [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19];
+    let dm7s = [0, 2, 4, 5, 7, 9, 10, 12, 14, 16, 17, 19];
+    let hd7s = [0, 1, 3, 5, 6, 8, 10, 12, 13, 15, 17, 18];
+    let mn6s = [0, 2, 3, 5, 7, 9, 10, 12, 15, 15, 17, 19];
+    let db9s = [0, 1, 4, 5, 7, 8, 10, 12, 13, 16, 17, 19];
+    let alds = [0, 2, 4, 6, 7, 9, 10, 12, 14, 16, 18, 19];
+    let augs = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22];
+    let dims = [0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33];
     const scales = [
       mj7s,
       mn7s,
       dm7s,
       hd7s,
-      mj6s,
       mn6s,
       db9s,
       alds,
       augs,
       dims,
     ];
+    const scalesDisplay = [
+      "ionian","aeolian","mixolydian", "locrian", "dorian", "dom flat 9", "lydian dom", "augmented", "diminished"
+    ]
+
+    const notesDisplay = [
+      "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
+    ]
 
     let faustN;
     let tf;
+    let bgcol=0;
 
     function preload() {
       tf = loadFont('./acidworkassets/font/Computerfont.ttf');
@@ -118,7 +124,7 @@
 
 
       // <color name="Persian orange" hex="CD947A" r="205" g="148" b="122" />
-      // <color name="Chinese Violet" hex="71587E" r="113" g="88" b="126" />
+      // <color name="Chinese Violet" hex="2718fb" r="113" g="88" b="126" />
       // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
       // <color name="Hunyadi yellow" hex="F0B650" r="240" g="182" b="80" />
       // <color name="Keppel" hex="67B5A0" r="103" g="181" b="160" />
@@ -130,14 +136,14 @@
         width / 3,
         30,
         0,
-        "tempo:", 40
+        "tempo:", 40,1
       );
       filter = new slidey(
         width / 4,
         height * 0.42,
         width / 2,
         15, 0,
-        "filter:", 40
+        "filter:", 40,1
 
       );
       scale = new slidey(
@@ -145,7 +151,7 @@
         height * 0.46,
         width / 2,
         15,
-        0, "scale:", 40
+        0, "scale:", 40,1
 
       );
       transp = new slidey(
@@ -153,7 +159,7 @@
         height * 0.5,
         width / 2,
         15,
-        0, "transpose:", 40
+        0, "transpose:", 40,1
 
       );
 
@@ -163,7 +169,7 @@
         height * 0.54,
         width / 2,
         15,
-        0, "wet:", 40
+        0, "wet:", 40,1
 
       );
       dirt = new slidey(
@@ -171,7 +177,7 @@
         height * 0.58,
         width / 2,
         15,
-        0, "dirt:", 40
+        0, "dirt:", 40,1
 
       );
       slide = new slidey(
@@ -179,7 +185,7 @@
         height * 0.62,
         width / 2,
         15,
-        0, "slide:", 40
+        0, "slide:", 40,1
 
       );
 
@@ -221,12 +227,13 @@
       // let avol;
       // let alen;
 
+
       bvol = new slidey(
         width / 16,
         (height / 12) + 100,
         width / 4,
         15,
-        0, "bassvol:", 20
+        0, "bassvol:", 20,1
 
       );
       blen = new slidey(
@@ -234,7 +241,7 @@
         (height / 12) + 100,
         width / 4,
         15,
-        0, "basslen:", 20
+        0, "basslen:", 20,1
 
       );
       kvol = new slidey(
@@ -242,7 +249,7 @@
         (height / 12) * 2 + 100,
         width / 4,
         15,
-        0, "kickvol:", 20
+        0, "kickvol:", 20,1
 
       );
       klen = new slidey(
@@ -250,7 +257,7 @@
         (height / 12) * 2 + 100,
         width / 4,
         15,
-        0, "kicklen:", 20
+        0, "kicklen:", 20,1
 
       );
       svol = new slidey(
@@ -258,7 +265,7 @@
         (height / 12) * 3 + 100,
         width / 4,
         15,
-        0, "snarevol:", 20
+        0, "snarevol:", 20,1
 
       );
       slen = new slidey(
@@ -266,7 +273,7 @@
         (height / 12) * 3 + 100,
         width / 4,
         15,
-        0, "snarelen:", 20
+        0, "snarelen:", 20,1
 
       );
       avol = new slidey(
@@ -274,7 +281,7 @@
         (height / 12) * 4 + 100,
         width / 4,
         15,
-        0, "amenvol:", 20
+        0, "amenvol:", 20,1
 
       );
       alen = new slidey(
@@ -282,7 +289,7 @@
         (height / 12) * 4 + 100,
         width / 4,
         15,
-        0, "amenlen:", 20
+        0, "amenlen:", 20,1
 
       );
 
@@ -293,8 +300,8 @@
           height / 12,
           width / 28,
           60,
-          "#CD947A",
-          "#71587E",
+          "#d5e98a",
+          "#2718fb",
           0
         );
         stepsBass.push(stb);
@@ -304,8 +311,8 @@
           (height / 12) * 2,
           width / 28,
           60,
-          "#CD947A",
-          "#71587E",
+          "#d5e98a",
+          "#2718fb",
           0
         );
         stepsKick.push(stk);
@@ -315,8 +322,8 @@
           (height / 12) * 3,
           width / 28,
           60,
-          "#CD947A",
-          "#71587E",
+          "#d5e98a",
+          "#2718fb",
           0
         );
         stepsSnare.push(sts);
@@ -326,8 +333,8 @@
           (height / 12) * 4,
           width / 28,
           60,
-          "#CD947A",
-          "#71587E",
+          "#d5e98a",
+          "#2718fb",
           0
         );
         stepsAmen.push(sta);
@@ -336,10 +343,10 @@
 
 
       for (st in stepsBass) {
-        stepsBass[st].draw("#CD947A", "#71587E", 0);
-        stepsKick[st].draw("#CD947A", "#71587E", 0);
-        stepsSnare[st].draw("#CD947A", "#71587E", 0);
-        stepsAmen[st].draw("#CD947A", "#71587E", 0);
+        stepsBass[st].draw("#d5e98a", "#2718fb", 0);
+        stepsKick[st].draw("#d5e98a", "#2718fb", 0);
+        stepsSnare[st].draw("#d5e98a", "#2718fb", 0);
+        stepsAmen[st].draw("#d5e98a", "#2718fb", 0);
       }
     }
 
@@ -365,17 +372,24 @@
     /////////////////////////////////DRAW///////////////////////////////////
 
     function draw() {
-      background("#67B5A0");
+      background("#ffc3b3")
       // translate(-width / 2, -height / 2);
       // drawGui();
 
+     
+
 
       for (st in stepsBass) {
-        stepsBass[st].draw("#CD947A", "#71587E", 0);
-        stepsKick[st].draw("#CD947A", "#71587E", 0);
-        stepsSnare[st].draw("#CD947A", "#71587E", 0);
-        stepsAmen[st].draw("#CD947A", "#71587E", 0);
+        stepsBass[st].draw("#d5e98a", "#2718fb");
+        stepsKick[st].draw("#d5e98a", "#2718fb");
+        stepsSnare[st].draw("#d5e98a", "#2718fb");
+        stepsAmen[st].draw("#d5e98a", "#2718fb");
+        stepsBass[st].setCol(0)
+        stepsKick[st].setCol(0)
+        stepsSnare[st].setCol(0)
+        stepsAmen[st].setCol(0)
       }
+
 
 
       // Set:
@@ -409,23 +423,23 @@
 
 
 
-      s.draw("#CD947A", "#71587E", 0);
-      filter.draw("#CD947A", "#71587E", 0);
-      scale.draw("#CD947A", "#71587E", 0);
-      transp.draw("#CD947A", "#71587E", 0);
-      wet.draw("#CD947A", "#71587E", 0);
-      dirt.draw("#CD947A", "#71587E", 0);
-      slide.draw("#CD947A", "#71587E", 0);
-      bvol.draw("#CD947A", "#71587E", 0);
-      blen.draw("#CD947A", "#71587E", 0);
-      kvol.draw("#CD947A", "#71587E", 0);
-      klen.draw("#CD947A", "#71587E", 0);
-      svol.draw("#CD947A", "#71587E", 0);
-      slen.draw("#CD947A", "#71587E", 0);
-      avol.draw("#CD947A", "#71587E", 0);
-      alen.draw("#CD947A", "#71587E", 0);
+      s.draw("#d5e98a", "#2718fb", 0);
+      filter.draw("#d5e98a", "#2718fb", 0);
+      scale.draw("#d5e98a", "#2718fb", 0);
+      transp.draw("#d5e98a", "#2718fb", 0);
+      wet.draw("#d5e98a", "#2718fb", 0);
+      dirt.draw("#d5e98a", "#2718fb", 0);
+      slide.draw("#d5e98a", "#2718fb", 0);
+      bvol.draw("#d5e98a", "#2718fb", 0);
+      blen.draw("#d5e98a", "#2718fb", 0);
+      kvol.draw("#d5e98a", "#2718fb", 0);
+      klen.draw("#d5e98a", "#2718fb", 0);
+      svol.draw("#d5e98a", "#2718fb", 0);
+      slen.draw("#d5e98a", "#2718fb", 0);
+      avol.draw("#d5e98a", "#2718fb", 0);
+      alen.draw("#d5e98a", "#2718fb", 0);
 
- 
+
 
       if (faustN) {
 
@@ -464,15 +478,15 @@
         );
         faustN.faustNode.setParamValue(
           "/acidworkv3_1_2/kstl",
-          klen.getValue(8,1, 1)
+          klen.getValue(8, 1, 1)
         );
         faustN.faustNode.setParamValue(
           "/acidworkv3_1_2/sstl",
-          slen.getValue(8,1, 1)
+          slen.getValue(8, 1, 1)
         );
         faustN.faustNode.setParamValue(
           "/acidworkv3_1_2/astl",
-          alen.getValue(8,1, 1)
+          alen.getValue(8, 1, 1)
         );
         faustN.faustNode.setParamValue(
           "/acidworkv3_1_2/synthGain",
@@ -492,16 +506,18 @@
         );
 
 
-
+        scale.setText(notesDisplay[transp.getValue(24, 100, 1)%12] + " " + scalesDisplay[scale.getValue(0,8,1)] +": ")
         if (gstep != undefined) {
           faustN.faustNode.setParamValue(
             `/acidworkv3_1_2/s${gstep + 1}`,
-            stepsBass[gstep].getSlideA(0, 12, 1)
+           scales[scale.getValue(0,8,1)][stepsBass[gstep].getSlideA(0, 11, 1)]
           );
           faustN.faustNode.setParamValue(
             `/acidworkv3_1_2/c${gstep + 1}`,
             stepsBass[gstep].getTog()
           );
+          stepsBass[gstep].setCol("#ffffff");
+
         }
 
         if (gkstep != undefined) {
@@ -513,6 +529,7 @@
             `/acidworkv3_1_2/kc${gkstep + 1}`,
             stepsKick[gkstep].getTog()
           );
+          stepsKick[gkstep].setCol("#ffffff");
         }
 
         if (gsstep != undefined) {
@@ -524,6 +541,7 @@
             `/acidworkv3_1_2/sc${gsstep + 1}`,
             stepsSnare[gsstep].getTog()
           );
+          stepsSnare[gsstep].setCol("#ffffff");
         }
 
         if (gastep != undefined) {
@@ -535,7 +553,10 @@
             `/acidworkv3_1_2/sp${gastep + 1}`,
             stepsAmen[gastep].getTog()
           );
+          stepsAmen[gastep].setCol("#ffffff");
         }
+
+
 
       }
     }
@@ -543,10 +564,10 @@
     // Set to > 0 if the DSP is polyphonic
     const FAUST_DSP_VOICES = 0;
 
-    (async () => { 
+    (async () => {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    const audioContext = new AudioCtx({ latencyHint: 0.00001 });
-    audioContext.suspend();
+      const audioContext = new AudioCtx({ latencyHint: 0.00001 });
+      audioContext.suspend();
 
       console.log(audioContext);
       // Create audio context activation button

@@ -112,7 +112,7 @@
       widthv = myCanvas.offsetWidth;
       prevw = widthv;
 
-      canvas = createCanvas(widthv, windowHeight * 2,WEBGL);
+      canvas = createCanvas(widthv, windowHeight * 2);
       canvas.style("display", "block"); // Removes extra margins
       canvas.parent("myCanvas");
 
@@ -366,9 +366,9 @@
 
     function draw() {
       background("#67B5A0");
-      translate(-width / 2, -height / 2);
+      // translate(-width / 2, -height / 2);
       // drawGui();
-      randb = random(0, 7);
+
 
       for (st in stepsBass) {
         stepsBass[st].draw("#CD947A", "#71587E", 0);
@@ -425,7 +425,7 @@
       avol.draw("#CD947A", "#71587E", 0);
       alen.draw("#CD947A", "#71587E", 0);
 
-      let flv = filter.getValue(30, 2000, 0);
+ 
 
       if (faustN) {
 

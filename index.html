@@ -70,6 +70,7 @@
     let slen;
     let avol;
     let alen;
+    let ran;
 
 
 
@@ -98,7 +99,7 @@
       dims,
     ];
     const scalesDisplay = [
-      "ionian","aeolian","mixolydian", "locrian", "dorian", "dom flat 9", "lydian dom", "augmented", "diminished"
+      "ionian", "aeolian", "mixolydian", "locrian", "dorian", "dom flat 9", "lydian dom", "augmented", "diminished"
     ]
 
     const notesDisplay = [
@@ -107,7 +108,54 @@
 
     let faustN;
     let tf;
-    let bgcol=0;
+
+    let bgcol = 0;
+    let colA = 0;
+    let colB = 0;
+    let colC = 0;
+
+
+
+    function makeColandRand() {
+      let r = floor(random(255));
+      let g = floor(random(255));
+      let b = floor(random(255));
+
+      let r2 = 255 - b;
+      let g2 = 255 - r;
+      let b2 = 255 - g;
+
+
+
+      bgcol = color(r2, g2, b2);
+      colA = color(r, g, b);
+      colB = color(g, b, r);
+      colC = color(b, r, g);
+
+      s.setRandom();
+      filter.setRandom();
+      scale.setRandom();
+      transp.setRandom();
+      wet.setRandom();
+      dirt.setRandom();
+      slide.setRandom()
+      bvol.setRandom();
+      blen.setRandom()
+      kvol.setRandom();
+      klen.setRandom();
+      svol.setRandom();
+      slen.setRandom();
+      avol.setRandom();
+      alen.setRandom();
+      for (st in stepsBass) {
+        stepsBass[st].setRandomized();
+        stepsKick[st].setRandomized();
+        stepsSnare[st].setRandomized();
+        stepsAmen[st].setRandomized();
+      }
+
+
+    }
 
     function preload() {
       tf = loadFont('./acidworkassets/font/Computerfont.ttf');
@@ -128,7 +176,7 @@
       // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
       // <color name="Hunyadi yellow" hex="F0B650" r="240" g="182" b="80" />
       // <color name="Keppel" hex="67B5A0" r="103" g="181" b="160" />
-
+     ran = new tog( width/8, height/32,20);
 
       s = new slidey(
         width - (width / 4) * 1.6,
@@ -136,14 +184,14 @@
         width / 3,
         30,
         0,
-        "tempo:", 40,1
+        "tempo:", 40, 1
       );
       filter = new slidey(
         width / 4,
         height * 0.42,
         width / 2,
         15, 0,
-        "filter:", 40,1
+        "filter:", 40, 1
 
       );
       scale = new slidey(
@@ -151,7 +199,7 @@
         height * 0.46,
         width / 2,
         15,
-        0, "scale:", 40,1
+        0, "scale:", 40, 1
 
       );
       transp = new slidey(
@@ -159,7 +207,7 @@
         height * 0.5,
         width / 2,
         15,
-        0, "transpose:", 40,1
+        0, "transpose:", 40, 1
 
       );
 
@@ -169,7 +217,7 @@
         height * 0.54,
         width / 2,
         15,
-        0, "wet:", 40,1
+        0, "wet:", 40, 1
 
       );
       dirt = new slidey(
@@ -177,7 +225,7 @@
         height * 0.58,
         width / 2,
         15,
-        0, "dirt:", 40,1
+        0, "dirt:", 40, 1
 
       );
       slide = new slidey(
@@ -185,7 +233,7 @@
         height * 0.62,
         width / 2,
         15,
-        0, "slide:", 40,1
+        0, "slide:", 40, 1
 
       );
 
@@ -233,7 +281,7 @@
         (height / 12) + 100,
         width / 4,
         15,
-        0, "bassvol:", 20,1
+        0, "bassvol:", 20, 1
 
       );
       blen = new slidey(
@@ -241,7 +289,7 @@
         (height / 12) + 100,
         width / 4,
         15,
-        0, "basslen:", 20,1
+        0, "basslen:", 20, 1
 
       );
       kvol = new slidey(
@@ -249,7 +297,7 @@
         (height / 12) * 2 + 100,
         width / 4,
         15,
-        0, "kickvol:", 20,1
+        0, "kickvol:", 20, 1
 
       );
       klen = new slidey(
@@ -257,7 +305,7 @@
         (height / 12) * 2 + 100,
         width / 4,
         15,
-        0, "kicklen:", 20,1
+        0, "kicklen:", 20, 1
 
       );
       svol = new slidey(
@@ -265,7 +313,7 @@
         (height / 12) * 3 + 100,
         width / 4,
         15,
-        0, "snarevol:", 20,1
+        0, "snarevol:", 20, 1
 
       );
       slen = new slidey(
@@ -273,7 +321,7 @@
         (height / 12) * 3 + 100,
         width / 4,
         15,
-        0, "snarelen:", 20,1
+        0, "snarelen:", 20, 1
 
       );
       avol = new slidey(
@@ -281,7 +329,7 @@
         (height / 12) * 4 + 100,
         width / 4,
         15,
-        0, "amenvol:", 20,1
+        0, "amenvol:", 20, 1
 
       );
       alen = new slidey(
@@ -289,7 +337,7 @@
         (height / 12) * 4 + 100,
         width / 4,
         15,
-        0, "amenlen:", 20,1
+        0, "amenlen:", 20, 1
 
       );
 
@@ -348,6 +396,8 @@
         stepsSnare[st].draw("#d5e98a", "#2718fb", 0);
         stepsAmen[st].draw("#d5e98a", "#2718fb", 0);
       }
+      makeColandRand()
+      ran.type=1;
     }
 
     function outputHandler(path, value) {
@@ -372,18 +422,18 @@
     /////////////////////////////////DRAW///////////////////////////////////
 
     function draw() {
-      background("#ffc3b3")
+      background(bgcol)
       // translate(-width / 2, -height / 2);
       // drawGui();
 
-     
+
 
 
       for (st in stepsBass) {
-        stepsBass[st].draw("#d5e98a", "#2718fb");
-        stepsKick[st].draw("#d5e98a", "#2718fb");
-        stepsSnare[st].draw("#d5e98a", "#2718fb");
-        stepsAmen[st].draw("#d5e98a", "#2718fb");
+        stepsBass[st].draw(colA, colB);
+        stepsKick[st].draw(colB, colC);
+        stepsSnare[st].draw(colB, colA);
+        stepsAmen[st].draw(colC, colA);
         stepsBass[st].setCol(0)
         stepsKick[st].setCol(0)
         stepsSnare[st].setCol(0)
@@ -422,24 +472,27 @@
       // astep
 
 
+      ran.draw(colC,colB,1);
+      s.draw(colA, colB, 0);
+      filter.draw(colA, colB, 0);
+      scale.draw(colA, colB, 0);
+      transp.draw(colA, colB, 0);
+      wet.draw(colA, colB, 0);
+      dirt.draw(colA, colB, 0);
+      slide.draw(colA, colB, 0);
+      bvol.draw(colA, colB, 0);
+      blen.draw(colA, colB, 0);
+      kvol.draw(colA, colB, 0);
+      klen.draw(colA, colB, 0);
+      svol.draw(colA, colB, 0);
+      slen.draw(colA, colB, 0);
+      avol.draw(colA, colB, 0);
+      alen.draw(colA, colB, 0);
 
-      s.draw("#d5e98a", "#2718fb", 0);
-      filter.draw("#d5e98a", "#2718fb", 0);
-      scale.draw("#d5e98a", "#2718fb", 0);
-      transp.draw("#d5e98a", "#2718fb", 0);
-      wet.draw("#d5e98a", "#2718fb", 0);
-      dirt.draw("#d5e98a", "#2718fb", 0);
-      slide.draw("#d5e98a", "#2718fb", 0);
-      bvol.draw("#d5e98a", "#2718fb", 0);
-      blen.draw("#d5e98a", "#2718fb", 0);
-      kvol.draw("#d5e98a", "#2718fb", 0);
-      klen.draw("#d5e98a", "#2718fb", 0);
-      svol.draw("#d5e98a", "#2718fb", 0);
-      slen.draw("#d5e98a", "#2718fb", 0);
-      avol.draw("#d5e98a", "#2718fb", 0);
-      alen.draw("#d5e98a", "#2718fb", 0);
-
-
+    
+      if(ran.value){
+        makeColandRand();
+      }
 
       if (faustN) {
 
@@ -506,11 +559,11 @@
         );
 
 
-        scale.setText(notesDisplay[transp.getValue(24, 100, 1)%12] + " " + scalesDisplay[scale.getValue(0,8,1)] +": ")
+        scale.setText(notesDisplay[transp.getValue(24, 100, 1) % 12] + " " + scalesDisplay[scale.getValue(0, 8, 1)] + ": ")
         if (gstep != undefined) {
           faustN.faustNode.setParamValue(
             `/acidworkv3_1_2/s${gstep + 1}`,
-           scales[scale.getValue(0,8,1)][stepsBass[gstep].getSlideA(0, 11, 1)]
+            scales[scale.getValue(0, 8, 1)][stepsBass[gstep].getSlideA(0, 11, 1)]
           );
           faustN.faustNode.setParamValue(
             `/acidworkv3_1_2/c${gstep + 1}`,

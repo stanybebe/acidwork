@@ -67,7 +67,7 @@ class slidey {
     pop();
 
     push();
-    fill("#373c5c");
+    fill(0);
     textFont(tf, this.size);
   
     if (typeof this.map === "number"&&this.display) {
@@ -90,6 +90,9 @@ class slidey {
     } else {
       return false;
     }
+  }
+  setRandom(){
+    this.value = random();
   }
 
   getValue(omin_, omax_, s_) {
@@ -117,7 +120,7 @@ class slidey {
 }
 class tog {
   constructor(xp, yp, size_) {
-    this.c1 = 1;
+    this.c1 = 10;
     this.value = false;
     this.valueB = false;
     this.dist = 0;
@@ -132,7 +135,12 @@ class tog {
     this.xPos = xp;
     this.base = yp;
     this.pv = 0;
+    this.type =0;
 
+  }
+
+  setRandom(){
+    this.value = round(random());
   }
 
   cache() {
@@ -144,7 +152,7 @@ class tog {
     }
   }
 
-  draw(ca, cb, cc) {
+  draw(ca, cb, cc, t) {
     this.c1--;
 
     push();
@@ -153,12 +161,24 @@ class tog {
 
     this.dist = dist(this.xPos, this.base, mouseX, mouseY);
 
+    
+   if(this.type==0){
     if (mouseIsPressed) {
       if (this.dist <= this.radiusP && this.c1 < 0) {
         this.value = !this.value;
-        this.c1 = 1;
+        this.c1 = 10;
       }
-    }
+    }}else{
+
+      if (mouseIsPressed) {
+        if (this.dist <= this.radiusP && this.c1 < 0) {
+          this.value = 1
+          this.c1 = 10;
+        }
+
+    }else{
+      this.value = 0;
+    }}
 
     if (this.value) {
       fill(cc);
@@ -191,7 +211,7 @@ class stepUnit {
   }
   draw(ca, cb) {
 
-    this.togg.draw(ca, cb, this.cola);
+    this.togg.draw(ca, cb, this.cola,0);
     this.sldA.draw(ca, cb, this.cola);
   }
   setCol(c) {
@@ -205,5 +225,9 @@ class stepUnit {
   }
   getSlideB(mn, mx, r) {
     return this.sldB.getValue(mn, mx, r);
+  }
+  setRandomized(){
+    this.togg.setRandom();
+    this.sldA.setRandom();
   }
 }

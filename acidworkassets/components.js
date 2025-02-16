@@ -91,8 +91,8 @@ class slidey {
       return false;
     }
   }
-  setRandom(){
-    this.value = random();
+  setRandom(w){
+    this.value = random()-Math.max(0, Math.min(w, 1));;
   }
 
   getValue(omin_, omax_, s_) {
@@ -228,6 +228,6 @@ class stepUnit {
   }
   setRandomized(){
     this.togg.setRandom();
-    this.sldA.setRandom();
+    this.sldA.setRandom(0);
   }
 }

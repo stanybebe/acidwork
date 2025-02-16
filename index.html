@@ -5,13 +5,18 @@
   <title>ACIDWERK</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.2/p5.min.js"></script>
   <script src="./acidworkassets/components.js"></script>
+  <link rel="stylesheet" href="./acidworkassets/main.css">
 
 </head>
 
 <body>
+  <div style="display: flex; align-items: center;">
+    <h1 style="margin-right: 10px;">ACIDWERK</h1>
+    <img src="./acidworkassets/logo.svg" alt="" style="height: 50px; width: auto;">
+  </div>
   <main>
     <span id="dsp-switch">
-      <center><button id="button-dsp">Start</button></center>
+      <center><button  id="button-dsp">Start</button></center>
 
       <center>
         <div id="myCanvas" style="width: 100% !important"></div>
@@ -132,21 +137,21 @@
       colB = color(g, b, r);
       colC = color(b, r, g);
 
-      s.setRandom();
-      filter.setRandom();
-      scale.setRandom();
-      transp.setRandom();
-      wet.setRandom();
-      dirt.setRandom();
-      slide.setRandom()
-      bvol.setRandom();
-      blen.setRandom()
-      kvol.setRandom();
-      klen.setRandom();
-      svol.setRandom();
-      slen.setRandom();
-      avol.setRandom();
-      alen.setRandom();
+      s.setRandom(0);
+      filter.setRandom(0);
+      scale.setRandom(0);
+      transp.setRandom(.3);
+      wet.setRandom(0);
+      dirt.setRandom(0);
+      slide.setRandom(0)
+      bvol.setRandom(0);
+      blen.setRandom(0)
+      kvol.setRandom(0);
+      klen.setRandom(0);
+      svol.setRandom(0);
+      slen.setRandom(0);
+      avol.setRandom(0);
+      alen.setRandom(0);
       for (st in stepsBass) {
         stepsBass[st].setRandomized();
         stepsKick[st].setRandomized();
@@ -176,7 +181,7 @@
       // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
       // <color name="Hunyadi yellow" hex="F0B650" r="240" g="182" b="80" />
       // <color name="Keppel" hex="67B5A0" r="103" g="181" b="160" />
-     ran = new tog( width/8, height/32,20);
+     ran = new tog( width/8, height/32,40);
 
       s = new slidey(
         width - (width / 4) * 1.6,
@@ -473,6 +478,8 @@
 
 
       ran.draw(colC,colB,1);
+      textFont(tf, 20);
+      text('random',(width/8)-28, height/32)
       s.draw(colA, colB, 0);
       filter.draw(colA, colB, 0);
       scale.draw(colA, colB, 0);

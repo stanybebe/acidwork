@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'Computerfont';
+    src: url('./font/Computerfont.ttf');
+}
+
+html  {
+    font-family: 'Computerfont';
+  }
+
+button {
+    font-family:inherit;
+    background-color: black; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px
+
+}

@@ -16,7 +16,7 @@
   </div>
   <main>
     <span id="dsp-switch">
-      <center><button  id="button-dsp">Start</button></center>
+      <center><button id="button-dsp">Start</button></center>
 
       <center>
         <div id="myCanvas" style="width: 100% !important"></div>
@@ -78,7 +78,9 @@
     let ran;
 
 
-
+    let bg;
+    let bgimg;
+    let img;
     let canvas;
     let prevw;
     let widthv;
@@ -118,13 +120,16 @@
     let colA = 0;
     let colB = 0;
     let colC = 0;
+    let r;
+    let g;
+    let b;
 
 
 
     function makeColandRand() {
-      let r = floor(random(255));
-      let g = floor(random(255));
-      let b = floor(random(255));
+      r = floor(random(255));
+      g = floor(random(255));
+      b = floor(random(255));
 
       let r2 = 255 - b;
       let g2 = 255 - r;
@@ -140,7 +145,7 @@
       s.setRandom(0);
       filter.setRandom(0);
       scale.setRandom(0);
-      transp.setRandom(.3);
+      transp.setRandom(.2);
       wet.setRandom(0);
       dirt.setRandom(0);
       slide.setRandom(0)
@@ -164,6 +169,8 @@
 
     function preload() {
       tf = loadFont('./acidworkassets/font/Computerfont.ttf');
+      img = loadImage('./acidworkassets/smiley.png');
+      myShader = loadShader("./acidworkassets/v.vert", "./acidworkassets/f.frag");
     }
 
     function setup() {
@@ -174,6 +181,8 @@
       canvas = createCanvas(widthv, windowHeight * 2);
       canvas.style("display", "block"); // Removes extra margins
       canvas.parent("myCanvas");
+      bgimg = createGraphics(400, 400);
+      bg = createGraphics(400, 400, WEBGL);
 
 
       // <color name="Persian orange" hex="CD947A" r="205" g="148" b="122" />
@@ -181,7 +190,7 @@
       // <color name="Timberwolf" hex="E0DDD6" r="224" g="221" b="214" />
       // <color name="Hunyadi yellow" hex="F0B650" r="240" g="182" b="80" />
       // <color name="Keppel" hex="67B5A0" r="103" g="181" b="160" />
-     ran = new tog( width/8, height/32,40);
+      ran = new tog(width / 8, height / 32, 40);
 
       s = new slidey(
         width - (width / 4) * 1.6,
@@ -241,45 +250,6 @@
         0, "slide:", 40, 1
 
       );
-
-      // Set:
-
-      /////// global params /////////
-
-      // amenGain
-      // synthGain
-      // kickGain
-      // snareGain
-      // Dist
-      // wet
-      // smootha
-
-      /////// in the component /////////
-      // amen
-      //kp
-      //sp
-      // sstl
-      // stl
-      // astl
-      // kstl
-
-
-      // Get:
-
-      // step
-      // sstep
-      // kstep
-      // astep
-
-      // let bvol;
-      // let blen;
-      // let kvol;
-      // let klen;
-      // let svol;
-      // let slen;
-      // let avol;
-      // let alen;
-
 
       bvol = new slidey(
         width / 16,
@@ -402,7 +372,7 @@
         stepsAmen[st].draw("#d5e98a", "#2718fb", 0);
       }
       makeColandRand()
-      ran.type=1;
+      ran.type = 1;
     }
 
     function outputHandler(path, value) {
@@ -428,9 +398,7 @@
 
     function draw() {
       background(bgcol)
-      // translate(-width / 2, -height / 2);
-      // drawGui();
-
+      shaderStuff()
 
 
 
@@ -446,40 +414,9 @@
       }
 
 
-
-      // Set:
-
-      /////// global params /////////
-
-      // amenGain
-      // synthGain
-      // kickGain
-      // snareGain
-      // Dist
-      // wet
-      // smootha
-
-      /////// in the component /////////
-      // amen
-      //kp
-      //sp
-      // sstl
-      // stl
-      // astl
-      // kstl
-
-
-      // Get:
-
-      // step
-      // sstep
-      // kstep
-      // astep
-
-
-      ran.draw(colC,colB,1);
+      ran.draw(colC, colB, 1);
       textFont(tf, 20);
-      text('random',(width/8)-28, height/32)
+      text('random', (width / 8) - 28, height / 32)
       s.draw(colA, colB, 0);
       filter.draw(colA, colB, 0);
       scale.draw(colA, colB, 0);
@@ -496,8 +433,8 @@
       avol.draw(colA, colB, 0);
       alen.draw(colA, colB, 0);
 
-    
-      if(ran.value){
+
+      if (ran.value) {
         makeColandRand();
       }
 
@@ -619,6 +556,27 @@
 
 
       }
+    }
+
+    function shaderStuff() {
+      bg.push();
+      bg.translate(bg.width / 2, bg.height / 2);
+      bgimg.image(img, 0, 0, 400, 400);
+      bg.shader(myShader);
+      myShader.setUniform("u_time", frameCount *  map(s.getValue(20, 200, 1),20,200,0.0002,.02));
+      myShader.setUniform("u_resolution", [bg.width, bg.height]);
+      myShader.setUniform("tex", bgimg);
+      myShader.setUniform('texelSize', [1.0 / bg.width, 1.0 / bg.height]);
+      myShader.setUniform('red', map(r, 0, 255, 0, 1));
+      myShader.setUniform('green', map(g, 0, 255, 0, 1));
+      myShader.setUniform('blue', map(b, 0, 255, 0, 1));
+      myShader.setUniform('dist', map(dirt.getValue(1, 8, 0), 1, 9, 0.0004, .009));
+    
+      bg.rect(0, 0, width, height);
+      bg.pop();
+      push();
+      image(bg, 0, 0, width, height);
+      pop();
     }
 
     // Set to > 0 if the DSP is polyphonic
